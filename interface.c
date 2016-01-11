@@ -167,111 +167,111 @@ struct wlc_interface interface_wlc;
 void init_interface(uint32_t mask) {
 	/* output */
 
-	if (mask & (1 << 0) != 0) {
+	if ((mask & (1 << 0)) != 0) {
 		interface_wlc.output.created = handle_output_created;
 	}
 
-	if (mask & (1 << 1) != 0) {
+	if ((mask & (1 << 1)) != 0) {
 		interface_wlc.output.destroyed = handle_output_destroyed;
 	}
 
-	if (mask & (1 << 2) != 0) {
+	if ((mask & (1 << 2)) != 0) {
 		interface_wlc.output.focus = handle_output_focus;
 	}
 
-	if (mask & (1 << 3) != 0) {
+	if ((mask & (1 << 3)) != 0) {
 		interface_wlc.output.resolution = handle_output_resolution;
 	}
 
-	if (mask & (1 << 4) != 0) {
+	if ((mask & (1 << 4)) != 0) {
 		interface_wlc.output.render.pre = handle_output_pre_render;
 	}
 
-	if (mask & (1 << 5) != 0) {
+	if ((mask & (1 << 5)) != 0) {
 		interface_wlc.output.render.post = handle_output_post_render;
 	}
 
 	/* view */
 
-	if (mask & (1 << 6) != 0) {
+	if ((mask & (1 << 6)) != 0) {
 		interface_wlc.view.created = handle_view_created;
 	}
 
-	if (mask & (1 << 7) != 0) {
+	if ((mask & (1 << 7)) != 0) {
 		interface_wlc.view.destroyed = handle_view_destroyed;
 	}
 
-	if (mask & (1 << 8) != 0) {
+	if ((mask & (1 << 8)) != 0) {
 		interface_wlc.view.focus = handle_view_focus;
 	}
 
-	if (mask & (1 << 9) != 0) {
+	if ((mask & (1 << 9)) != 0) {
 		interface_wlc.view.move_to_output = handle_view_move_to_output;
 	}
 
-	if (mask & (1 << 10) != 0) {
+	if ((mask & (1 << 10)) != 0) {
 		interface_wlc.view.request.geometry = handle_view_geometry_request;
 	}
 
-	if (mask & (1 << 11) != 0) {
+	if ((mask & (1 << 11)) != 0) {
 		interface_wlc.view.request.state = handle_view_state_request;
 	}
 
-	if (mask & (1 << 12) != 0) {
+	if ((mask & (1 << 12)) != 0) {
 		interface_wlc.view.request.move = handle_view_move_request;
 	}
 
-	if (mask & (1 << 13) != 0) {
+	if ((mask & (1 << 13)) != 0) {
 		interface_wlc.view.request.resize = handle_view_resize_request;
 	}
 
-	if (mask & (1 << 14) != 0) {
+	if ((mask & (1 << 14)) != 0) {
 		interface_wlc.view.render.pre = handle_view_pre_render;
 	}
 
-	if (mask & (1 << 15) != 0) {
+	if ((mask & (1 << 15)) != 0) {
 		interface_wlc.view.render.post = handle_view_post_render;
 	}
 
 	/* keyboard */
 
-	if (mask & (1 << 16) != 0) {
+	if ((mask & (1 << 16)) != 0) {
 		interface_wlc.keyboard.key = handle_keyboard_key;
 	}
 
 	/* pointer */
 
-	if (mask & (1 << 17) != 0) {
+	if ((mask & (1 << 17)) != 0) {
 		interface_wlc.pointer.button = handle_pointer_button;
 	}
 
-	if (mask & (1 << 18) != 0) {
+	if ((mask & (1 << 18)) != 0) {
 		interface_wlc.pointer.scroll = handle_pointer_scroll;
 	}
 
-	if (mask & (1 << 19) != 0) {
+	if ((mask & (1 << 19)) != 0) {
 		interface_wlc.pointer.motion = handle_pointer_motion;
 	}
 
 	/* touch */
 
-	if (mask & (1 << 20) != 0) {
+	if ((mask & (1 << 20)) != 0) {
 		interface_wlc.touch.touch = handle_touch_touch;
 	}
 
 	/* compositor */
 
-	if (mask & (1 << 21) != 0) {
+	if ((mask & (1 << 21)) != 0) {
 		interface_wlc.compositor.ready = handle_compositor_ready;
 	}
 
 	/* input */
 
-	if (mask & (1 << 22) != 0) {
+	if ((mask & (1 << 22)) != 0) {
 		interface_wlc.input.created = handle_input_created;
 	}
 
-	if (mask & (1 << 23) != 0) {
+	if ((mask & (1 << 23)) != 0) {
 		interface_wlc.input.destroyed = handle_input_destroyed;
 	}
 }
