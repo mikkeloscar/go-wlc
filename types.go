@@ -12,6 +12,7 @@ type EventSource *C.struct_wlc_event_source
 
 // type XKBState *C.struct_xkb_state
 // type XKBKeymap *C.struct_xkb_keymap
+
 type InputDevice *C.struct_libinput_device
 
 type LogType C.enum_wlc_log_type
