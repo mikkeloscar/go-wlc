@@ -91,8 +91,8 @@ type Interface struct {
 // output wrappers
 
 //export go_handle_output_created
-func go_handle_output_created(output C.wlc_handle) bool {
-	return wlcInterface.Output.Created(Handle(output))
+func go_handle_output_created(output C.wlc_handle) C._Bool {
+	return C._Bool(wlcInterface.Output.Created(Handle(output)))
 }
 
 //export go_handle_output_destroyed
@@ -123,8 +123,8 @@ func go_handle_output_post_render(output C.wlc_handle) {
 // view wrappers
 
 //export go_handle_view_created
-func go_handle_view_created(view C.wlc_handle) bool {
-	return wlcInterface.View.Created(Handle(view))
+func go_handle_view_created(view C.wlc_handle) C._Bool {
+	return C._Bool(wlcInterface.View.Created(Handle(view)))
 }
 
 //export go_handle_view_destroyed
@@ -175,67 +175,67 @@ func go_handle_view_post_render(view C.wlc_handle) {
 // keyboard wrapper
 
 //export go_handle_keyboard_key
-func go_handle_keyboard_key(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, key C.uint32_t, state C.enum_wlc_key_state) bool {
-	return wlcInterface.Keyboard.Key(
+func go_handle_keyboard_key(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, key C.uint32_t, state C.enum_wlc_key_state) C._Bool {
+	return C._Bool(wlcInterface.Keyboard.Key(
 		Handle(view),
 		uint32(time),
 		modsCtoGo(modifiers),
 		uint32(key),
 		KeyState(state),
-	)
+	))
 }
 
 // pointer wrapper
 
 //export go_handle_pointer_button
-func go_handle_pointer_button(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, button C.uint32_t, state C.enum_wlc_button_state, point *C.struct_wlc_point) bool {
-	return wlcInterface.Pointer.Button(
+func go_handle_pointer_button(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, button C.uint32_t, state C.enum_wlc_button_state, point *C.struct_wlc_point) C._Bool {
+	return C._Bool(wlcInterface.Pointer.Button(
 		Handle(view),
 		uint32(time),
 		modsCtoGo(modifiers),
 		uint32(button),
 		ButtonState(state),
 		pointCtoGo(point),
-	)
+	))
 }
 
 //export go_handle_pointer_scroll
-func go_handle_pointer_scroll(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, axisBits C.uint8_t, amount *C.double) bool {
+func go_handle_pointer_scroll(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, axisBits C.uint8_t, amount *C.double) C._Bool {
 	// convert double[2] to [2]float64
 	goAmount := [2]float64{
 		*(*float64)(amount),
 		*(*float64)(unsafe.Pointer(uintptr(unsafe.Pointer(amount)) + unsafe.Sizeof(*amount))),
 	}
-	return wlcInterface.Pointer.Scroll(
+	return C._Bool(wlcInterface.Pointer.Scroll(
 		Handle(view),
 		uint32(time),
 		modsCtoGo(modifiers),
 		uint8(axisBits),
 		goAmount,
-	)
+	))
 }
 
 //export go_handle_pointer_motion
-func go_handle_pointer_motion(view C.wlc_handle, time C.uint32_t, point *C.struct_wlc_point) bool {
-	return wlcInterface.Pointer.Motion(
+func go_handle_pointer_motion(view C.wlc_handle, time C.uint32_t, point *C.struct_wlc_point) C._Bool {
+	return C._Bool(wlcInterface.Pointer.Motion(
 		Handle(view),
 		uint32(time),
 		pointCtoGo(point),
-	)
+	))
 }
 
 // touch wrapper
 
 //export go_handle_touch_touch
-func go_handle_touch_touch(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, touch C.enum_wlc_touch_type, slot C.int32_t, point *C.struct_wlc_point) bool {
-	return wlcInterface.Touch.Touch(
+func go_handle_touch_touch(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, touch C.enum_wlc_touch_type, slot C.int32_t, point *C.struct_wlc_point) C._Bool {
+	return C._Bool(wlcInterface.Touch.Touch(
 		Handle(view),
 		uint32(time),
 		modsCtoGo(modifiers),
 		TouchType(touch),
 		int32(slot),
 		pointCtoGo(point),
-	)
+	))
 }
 
 // compositor wrapper
@@ -248,8 +248,8 @@ func go_handle_compositor_ready() {
 // input wrapper
 
 //export go_handle_input_created
-func go_handle_input_created(device *C.struct_libinput_device) bool {
-	return wlcInterface.Input.Created(InputDevice(device))
+func go_handle_input_created(device *C.struct_libinput_device) C._Bool {
+	return C._Bool(wlcInterface.Input.Created(InputDevice(device)))
 }
 
 //export go_handle_input_destroyed
