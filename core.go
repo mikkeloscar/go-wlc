@@ -179,7 +179,7 @@ func Exec(bin string, args []string) {
 	C.wlc_exec(cbin, cargs)
 }
 
-// Run even loop.
+// Run event loop.
 func Run() {
 	C.wlc_run()
 }
