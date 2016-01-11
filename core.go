@@ -5,6 +5,14 @@ package wlc
 #include <stdlib.h>
 #include <wlc/wlc.h>
 
+// handle wlc_log_set_handler callback.
+extern void log_handler_cb(enum wlc_log_type type, const char *str);
+extern void wrap_wlc_log_set_handler();
+
+// handle wlc_event_loop_add_fd callback.
+extern int event_loop_fd_cb(int fd, uint32_t mask, void *arg);
+extern struct wlc_event_source *wrap_wlc_event_loop_add_fd(int fd, uint32_t mask);
+
 // internal wlc_interface reference.
 extern struct wlc_interface interface_wlc;
 extern void init_interface(uint32_t mask);
@@ -13,9 +21,30 @@ import "C"
 
 import "unsafe"
 
-// TODO set log handler
+var logHandler func(LogType, string)
 
-// Init
+//export _go_log_handler_cb
+func _go_log_handler_cb(typ C.enum_wlc_log_type, msg *C.char) {
+	logHandler(LogType(typ), C.GoString(msg))
+}
+
+// LogSetHandler Set log handler. Can be set before Init.
+func LogSetHandler(handler func(LogType, string)) {
+	logHandler = handler
+	C.wrap_wlc_log_set_handler()
+}
+
+// Init Initialize wlc. Returns false on failure.
+//
+// Avoid running unverified code before Init as wlc compositor may be run
+// with higher privileges on non logind systems where compositor binary needs
+// to be suid.
+//
+// Init's purpose is to initialize and drop privileges as soon as possible.
+//
+// TODO:
+// You can pass argc and argv from main(), so wlc can rename the process it
+// forks to cleanup crashed parent process and do FD passing (non-logind).
 func Init(i *Interface) bool {
 	wlcInterface = i
 	var enableMask uint32 = 0
@@ -166,7 +195,33 @@ func HandleGetUserData(handle Handle) unsafe.Pointer {
 	return C.wlc_handle_get_user_data(C.wlc_handle(handle))
 }
 
-// TODO wlc_event_loop*
+type fdEvent struct {
+	cb  func(int, uint32, interface{})
+	arg interface{}
+}
+
+var eventLoopFd = make(map[int]fdEvent)
+
+//export _go_event_loop_fd_cb
+func _go_event_loop_fd_cb(fd C.int, mask C.uint32_t) {
+	if event, ok := eventLoopFd[int(fd)]; ok {
+		event.cb(int(fd), uint32(mask), event.arg)
+	}
+}
+
+// EventLoopAddFd Add fd to event loop.
+func EventLoopAddFd(fd int, mask uint32, cb func(int, uint32, interface{}), arg interface{}) EventSource {
+	eventLoopFd[fd] = fdEvent{
+		cb:  cb,
+		arg: arg,
+	}
+	return EventSource(C.wrap_wlc_event_loop_add_fd(
+		C.int(fd),
+		C.uint32_t(mask),
+	))
+}
+
+// TODO wlc_event_loop_add_timer*
 
 // EventSourceTimerUpdate Update timer to trigger after delay.
 // Returns true on success.
