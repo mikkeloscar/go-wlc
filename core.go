@@ -170,6 +170,8 @@ func GetBackendType() BackendType {
 
 // Exec program.
 func Exec(bin string, args []string) {
+	// prepend bin to start of args slice as expected by wlc.
+	args = append([]string{bin}, args...)
 	cbin := C.CString(bin)
 	defer C.free(unsafe.Pointer(cbin))
 	cargs := strSlicetoCArray(args)
