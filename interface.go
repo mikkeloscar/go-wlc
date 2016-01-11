@@ -41,6 +41,7 @@ import "unsafe"
 
 var wlcInterface *Interface
 
+// Interface is used for commication with wlc.
 type Interface struct {
 	Output struct {
 		Created    func(Handle) bool

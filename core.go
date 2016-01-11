@@ -28,13 +28,13 @@ func _go_log_handler_cb(typ C.enum_wlc_log_type, msg *C.char) {
 	logHandler(LogType(typ), C.GoString(msg))
 }
 
-// LogSetHandler Set log handler. Can be set before Init.
+// LogSetHandler sets log handler. Can be set before Init.
 func LogSetHandler(handler func(LogType, string)) {
 	logHandler = handler
 	C.wrap_wlc_log_set_handler()
 }
 
-// Init Initialize wlc. Returns false on failure.
+// Init initializeses wlc. Returns false on failure.
 //
 // Avoid running unverified code before Init as wlc compositor may be run
 // with higher privileges on non logind systems where compositor binary needs
@@ -163,7 +163,7 @@ func Terminate() {
 	C.wlc_terminate()
 }
 
-// GetBackendType query the backend wlc is using.
+// GetBackendType queries for the backend wlc is using.
 func GetBackendType() BackendType {
 	return BackendType(C.wlc_get_backend_type())
 }
@@ -184,13 +184,13 @@ func Run() {
 
 // TODO make more go friendly
 
-// HandleSetUserData Link custom data to handle.
+// HandleSetUserData can be used to link custom data to handle.
 // Client must allocate and handle the data as some C type.
 func HandleSetUserData(handle Handle, userdata unsafe.Pointer) {
 	C.wlc_handle_set_user_data(C.wlc_handle(handle), userdata)
 }
 
-// HandleGetUserData Get custom linked user data from handle.
+// HandleGetUserData gets custom linked user data from handle.
 func HandleGetUserData(handle Handle) unsafe.Pointer {
 	return C.wlc_handle_get_user_data(C.wlc_handle(handle))
 }
@@ -209,7 +209,7 @@ func _go_event_loop_fd_cb(fd C.int, mask C.uint32_t) {
 	}
 }
 
-// EventLoopAddFd Add fd to event loop.
+// EventLoopAddFd adds fd to event loop.
 func EventLoopAddFd(fd int, mask uint32, cb func(int, uint32, interface{}), arg interface{}) EventSource {
 	eventLoopFd[fd] = fdEvent{
 		cb:  cb,
@@ -223,7 +223,7 @@ func EventLoopAddFd(fd int, mask uint32, cb func(int, uint32, interface{}), arg 
 
 // TODO wlc_event_loop_add_timer*
 
-// EventSourceTimerUpdate Update timer to trigger after delay.
+// EventSourceTimerUpdate updates timer to trigger after delay.
 // Returns true on success.
 func EventSourceTimerUpdate(source EventSource, ms_delay int32) bool {
 	return bool(C.wlc_event_source_timer_update(
@@ -232,7 +232,7 @@ func EventSourceTimerUpdate(source EventSource, ms_delay int32) bool {
 	))
 }
 
-// EventSourceRemove Remove event source from event loop.
+// EventSourceRemove removes event source from event loop.
 func EventSourceRemove(source EventSource) {
 	C.wlc_event_source_remove(source)
 }
