@@ -42,7 +42,7 @@ func freeCStrArray(arr **C.char) {
 }
 
 func handlesCArraytoGoSlice(handles *C.wlc_handle, len int) []Handle {
-	goHandles := make([]Handle, 0, len)
+	goHandles := make([]Handle, len)
 	size := int(unsafe.Sizeof(*handles))
 	for i := 0; i < len; i++ {
 		ptr := unsafe.Pointer(uintptr(unsafe.Pointer(handles)) + uintptr(size*i))
