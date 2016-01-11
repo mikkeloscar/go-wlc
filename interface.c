@@ -3,15 +3,15 @@
 
 /* output */
 bool handle_output_created(wlc_handle output) {
-	return go_handle_output_created(output);
+	return _go_handle_output_created(output);
 }
 
 void handle_output_destroyed(wlc_handle output) {
-	go_handle_output_destroyed(output);
+	_go_handle_output_destroyed(output);
 }
 
 void handle_output_focus(wlc_handle output, bool focus) {
-	go_handle_output_focus(output, focus);
+	_go_handle_output_focus(output, focus);
 }
 
 void handle_output_resolution(wlc_handle output, const struct wlc_size *from, const struct wlc_size *to) {
@@ -23,32 +23,32 @@ void handle_output_resolution(wlc_handle output, const struct wlc_size *from, co
 		.w = to->w,
 		.h = to->h
 	};
-	go_handle_output_resolution(output, &nc_from, &nc_to);
+	_go_handle_output_resolution(output, &nc_from, &nc_to);
 }
 
 void handle_output_pre_render(wlc_handle output) {
-	go_handle_output_pre_render(output);
+	_go_handle_output_pre_render(output);
 }
 
 void handle_output_post_render(wlc_handle output) {
-	go_handle_output_post_render(output);
+	_go_handle_output_post_render(output);
 }
 
 /* view */
 bool handle_view_created(wlc_handle view) {
-	return go_handle_view_created(view);
+	return _go_handle_view_created(view);
 }
 
 void handle_view_destroyed(wlc_handle view) {
-	go_handle_view_destroyed(view);
+	_go_handle_view_destroyed(view);
 }
 
 void handle_view_focus(wlc_handle view, bool focus) {
-	go_handle_view_focus(view, focus);
+	_go_handle_view_focus(view, focus);
 }
 
 void handle_view_move_to_output(wlc_handle view, wlc_handle from_output, wlc_handle to_output) {
-	go_handle_view_move_to_output(view, from_output, to_output);
+	_go_handle_view_move_to_output(view, from_output, to_output);
 }
 
 void handle_view_geometry_request(wlc_handle view, const struct wlc_geometry *geometry) {
@@ -62,11 +62,11 @@ void handle_view_geometry_request(wlc_handle view, const struct wlc_geometry *ge
 			.h = geometry->size.h
 		}
 	};
-	go_handle_view_geometry_request(view, &nc_geometry);
+	_go_handle_view_geometry_request(view, &nc_geometry);
 }
 
 void handle_view_state_request(wlc_handle view, enum wlc_view_state_bit bit, bool toggle) {
-	go_handle_view_state_request(view, bit, toggle);
+	_go_handle_view_state_request(view, bit, toggle);
 }
 
 void handle_view_move_request(wlc_handle view, const struct wlc_point *point) {
@@ -74,7 +74,7 @@ void handle_view_move_request(wlc_handle view, const struct wlc_point *point) {
 		.x = point->x,
 		.y = point->y
 	};
-	go_handle_view_move_request(view, &nc_point);
+	_go_handle_view_move_request(view, &nc_point);
 }
 
 void handle_view_resize_request(wlc_handle view, uint32_t edges, const struct wlc_point *point) {
@@ -82,15 +82,15 @@ void handle_view_resize_request(wlc_handle view, uint32_t edges, const struct wl
 		.x = point->x,
 		.y = point->y
 	};
-	go_handle_view_resize_request(view, edges, &nc_point);
+	_go_handle_view_resize_request(view, edges, &nc_point);
 }
 
 void handle_view_pre_render(wlc_handle view) {
-	go_handle_view_pre_render(view);
+	_go_handle_view_pre_render(view);
 }
 
 void handle_view_post_render(wlc_handle view) {
-	go_handle_view_post_render(view);
+	_go_handle_view_post_render(view);
 }
 
 /* keyboard */
@@ -99,7 +99,7 @@ bool handle_keyboard_key(wlc_handle view, uint32_t time, const struct wlc_modifi
 		.leds = modifiers->leds,
 		.mods = modifiers->mods
 	};
-	return go_handle_keyboard_key(view, time, &nc_modifiers, key, state);
+	return _go_handle_keyboard_key(view, time, &nc_modifiers, key, state);
 }
 
 /* pointer */
@@ -112,7 +112,7 @@ bool handle_pointer_button(wlc_handle view, uint32_t time, const struct wlc_modi
 		.x = point->x,
 		.y = point->y
 	};
-	return go_handle_pointer_button(view, time, &nc_modifiers, button, state, &nc_point);
+	return _go_handle_pointer_button(view, time, &nc_modifiers, button, state, &nc_point);
 }
 
 bool handle_pointer_scroll(wlc_handle view, uint32_t time, const struct wlc_modifiers *modifiers, uint8_t axis_bits, double amount[2]) {
@@ -120,7 +120,7 @@ bool handle_pointer_scroll(wlc_handle view, uint32_t time, const struct wlc_modi
 		.leds = modifiers->leds,
 		.mods = modifiers->mods
 	};
-	return go_handle_pointer_scroll(view, time, &nc_modifiers, axis_bits, amount);
+	return _go_handle_pointer_scroll(view, time, &nc_modifiers, axis_bits, amount);
 }
 
 bool handle_pointer_motion(wlc_handle view, uint32_t time, const struct wlc_point *point) {
@@ -128,7 +128,7 @@ bool handle_pointer_motion(wlc_handle view, uint32_t time, const struct wlc_poin
 		.x = point->x,
 		.y = point->y
 	};
-	return go_handle_pointer_motion(view, time, &nc_point);
+	return _go_handle_pointer_motion(view, time, &nc_point);
 }
 
 /* touch */
@@ -141,21 +141,21 @@ bool handle_touch_touch(wlc_handle view, uint32_t time, const struct wlc_modifie
 		.x = point->x,
 		.y = point->y
 	};
-	return go_handle_touch_touch(view, time, &nc_modifiers, touch, slot, &nc_point);
+	return _go_handle_touch_touch(view, time, &nc_modifiers, touch, slot, &nc_point);
 }
 
 /* compositor */
 void handle_compositor_ready(void) {
-	go_handle_compositor_ready();
+	_go_handle_compositor_ready();
 }
 
 /* input */
 bool handle_input_created(struct libinput_device *device) {
-	return go_handle_input_created(device);
+	return _go_handle_input_created(device);
 }
 
 void handle_input_destroyed(struct libinput_device *device) {
-	go_handle_input_destroyed(device);
+	_go_handle_input_destroyed(device);
 }
 
 
