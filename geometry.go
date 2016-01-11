@@ -47,6 +47,13 @@ type Geometry struct {
 	Size   Size
 }
 
+func (g *Geometry) c() *C.struct_wlc_geometry {
+	return &C.struct_wlc_geometry{
+		origin: *g.Origin.c(),
+		size:   *g.Size.c(),
+	}
+}
+
 func geometryCtoGo(c *C.struct_wlc_geometry) Geometry {
 	return Geometry{
 		Origin: pointCtoGo((*C.struct_wlc_point)(&(*c).origin)),
