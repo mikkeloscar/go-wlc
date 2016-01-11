@@ -37,29 +37,37 @@ func KeyboardGetCurrentKeys() []uint32 {
 
 // KeyboardGetKeysymForKey Utility function to convert raw keycode to keysym.
 // Passed modifiers may transform the key.
-func KeyboardGetKeysymForKey(key uint32, mods Modifiers) uint32 {
-	cmods := mods.c()
-	defer C.free(unsafe.Pointer(cmods))
-	return uint32(C.wlc_keyboard_get_keysym_for_key(C.uint32_t(key), cmods))
+func KeyboardGetKeysymForKey(key uint32, mods *Modifiers) uint32 {
+	if mods != nil {
+		cmods := mods.c()
+		defer C.free(unsafe.Pointer(cmods))
+		return uint32(C.wlc_keyboard_get_keysym_for_key(C.uint32_t(key), cmods))
+	}
+
+	return uint32(C.wlc_keyboard_get_keysym_for_key(C.uint32_t(key), nil))
 }
 
 // KeyboardGetUtf32ForKey Utility function to convert raw keycode to
 // Unicdoe/UTF-32 codepoint. Passed modifiers may transform the key.
-func KeyboardGetUtf32ForKey(key uint32, mods Modifiers) uint32 {
-	cmods := mods.c()
-	defer C.free(unsafe.Pointer(cmods))
-	return uint32(C.wlc_keyboard_get_utf32_for_key(C.uint32_t(key), cmods))
+func KeyboardGetUtf32ForKey(key uint32, mods *Modifiers) uint32 {
+	if mods != nil {
+		cmods := mods.c()
+		defer C.free(unsafe.Pointer(cmods))
+		return uint32(C.wlc_keyboard_get_utf32_for_key(C.uint32_t(key), cmods))
+	}
+
+	return uint32(C.wlc_keyboard_get_utf32_for_key(C.uint32_t(key), nil))
 }
 
 // PointerGetPosition Get current pointer position.
-func PointerGetPosition() Point {
+func PointerGetPosition() *Point {
 	var pos C.struct_wlc_point
 	C.wlc_pointer_get_position(&pos)
 	return pointCtoGo(&pos)
 }
 
 //PointerSetPosition
-func PointerSetPosition(pos Point) {
+func PointerSetPosition(pos *Point) {
 	cpos := pos.c()
 	defer C.free(unsafe.Pointer(cpos))
 	C.wlc_pointer_set_position(cpos)

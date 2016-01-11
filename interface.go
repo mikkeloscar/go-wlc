@@ -46,7 +46,7 @@ type Interface struct {
 		Created    func(Handle) bool
 		Destroyed  func(Handle)
 		Focus      func(Handle, bool)
-		Resolution func(Handle, Size, Size)
+		Resolution func(Handle, *Size, *Size)
 		Render     struct {
 			Pre  func(Handle)
 			Post func(Handle)
@@ -58,10 +58,10 @@ type Interface struct {
 		Focus        func(Handle, bool)
 		MoveToOutput func(Handle, Handle, Handle)
 		Request      struct {
-			Geometry func(Handle, Geometry)
+			Geometry func(Handle, *Geometry)
 			State    func(Handle, ViewStateBit, bool)
-			Move     func(Handle, Point)
-			Resize   func(Handle, uint32, Point)
+			Move     func(Handle, *Point)
+			Resize   func(Handle, uint32, *Point)
 		}
 		Render struct {
 			Pre  func(Handle)
@@ -72,12 +72,12 @@ type Interface struct {
 		Key func(Handle, uint32, Modifiers, uint32, KeyState) bool
 	}
 	Pointer struct {
-		Button func(Handle, uint32, Modifiers, uint32, ButtonState, Point) bool
+		Button func(Handle, uint32, Modifiers, uint32, ButtonState, *Point) bool
 		Scroll func(Handle, uint32, Modifiers, uint8, [2]float64) bool
-		Motion func(Handle, uint32, Point) bool
+		Motion func(Handle, uint32, *Point) bool
 	}
 	Touch struct {
-		Touch func(Handle, uint32, Modifiers, TouchType, int32, Point) bool
+		Touch func(Handle, uint32, Modifiers, TouchType, int32, *Point) bool
 	}
 	Compositor struct {
 		Ready func()

@@ -60,14 +60,14 @@ func ViewSetMask(view Handle, mask uint32) {
 }
 
 // ViewGetGeometry Get current geometry.
-func ViewGetGeometry(view Handle) Geometry {
+func ViewGetGeometry(view Handle) *Geometry {
 	cgeometry := C.wlc_view_get_geometry(C.wlc_handle(view))
 	return geometryCtoGo(cgeometry)
 }
 
 // ViewSetGeometry Set geomatry. Set edges if the geometry change is caused by
 // interactive resize.
-func ViewSetGeometry(view Handle, edges uint32, geometry Geometry) {
+func ViewSetGeometry(view Handle, edges uint32, geometry *Geometry) {
 	cgeometry := geometry.c()
 	defer C.free(unsafe.Pointer(cgeometry))
 	C.wlc_view_set_geometry(C.wlc_handle(view), C.uint32_t(edges), cgeometry)

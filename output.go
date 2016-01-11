@@ -38,7 +38,7 @@ func OutputSetSleep(output Handle, sleep bool) {
 }
 
 // OutputGetResolution Get output resolution.
-func OutputGetResolution(output Handle) Size {
+func OutputGetResolution(output Handle) *Size {
 	csize := C.wlc_output_get_resolution(C.wlc_handle(output))
 	return sizeCtoGo(csize)
 }
