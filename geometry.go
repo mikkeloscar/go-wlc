@@ -28,7 +28,9 @@ struct wlc_geometry *init_geometry(int32_t x, int32_t y, uint32_t w, uint32_t h)
 }
 */
 import "C"
+import "math"
 
+// Point is a fixed 2D point.
 type Point struct {
 	X, Y int32
 }
@@ -48,6 +50,7 @@ func pointCtoGo(c *C.struct_wlc_point) *Point {
 	return nil
 }
 
+// Size is a fixed 2D size.
 type Size struct {
 	W, H uint32
 }
@@ -67,6 +70,7 @@ func sizeCtoGo(c *C.struct_wlc_size) *Size {
 	return nil
 }
 
+// Geometry is a fixed 2D point, size pair.
 type Geometry struct {
 	Origin Point
 	Size   Size
@@ -90,4 +94,65 @@ func geometryCtoGo(c *C.struct_wlc_geometry) *Geometry {
 	}
 
 	return nil
+}
+
+var (
+	PointZero    = Point{0, 0}
+	SizeZero     = Size{0, 0}
+	GeometryZero = Geometry{Point{0, 0}, Size{0, 0}}
+)
+
+// PointMin returns the smallest values of two points.
+func PointMin(a, b Point) Point {
+	return Point{
+		X: int32(math.Min(float64(a.X), float64(b.X))),
+		Y: int32(math.Min(float64(a.Y), float64(b.Y))),
+	}
+}
+
+// PointMax returns the biggest values of two points.
+func PointMax(a, b Point) Point {
+	return Point{
+		X: int32(math.Max(float64(a.X), float64(b.X))),
+		Y: int32(math.Max(float64(a.Y), float64(b.Y))),
+	}
+}
+
+// SizeMin returns the smallest values of two sizes.
+func SizeMin(a, b Size) Size {
+	return Size{
+		W: uint32(math.Min(float64(a.W), float64(b.W))),
+		H: uint32(math.Min(float64(a.H), float64(b.H))),
+	}
+}
+
+// SizeMax returns the biggest values of two sizes.
+func SizeMax(a, b Size) Size {
+	return Size{
+		W: uint32(math.Max(float64(a.W), float64(b.W))),
+		H: uint32(math.Max(float64(a.H), float64(b.H))),
+	}
+}
+
+// PointEquals compares two points.
+func PointEquals(a, b Point) bool {
+	return a.X == b.X && a.Y == b.Y
+}
+
+// SizeEquals compares two sizes.
+func SizeEquals(a, b Size) bool {
+	return a.W == b.W && a.H == b.H
+}
+
+// GeometryEquals compares two geometries.
+func GeometryEquals(a, b Geometry) bool {
+	return PointEquals(a.Origin, b.Origin) && SizeEquals(a.Size, b.Size)
+}
+
+// GeometryContains check if b is contained in a.
+func GeometryContains(a, b Geometry) bool {
+	return a.Origin.X <= b.Origin.X &&
+		a.Origin.Y <= b.Origin.Y &&
+		a.Origin.X+int32(a.Size.W) >= b.Origin.X+int32(b.Size.W) &&
+		a.Origin.Y+int32(a.Size.H) >= b.Origin.Y+int32(b.Size.H)
 }
