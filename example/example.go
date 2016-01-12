@@ -8,6 +8,7 @@ import (
 	"github.com/mikkeloscar/go-wlc"
 )
 
+// constants you would normally get from xkbcommon and linux/input.h
 const (
 	XKBKeyq      = 0x0071
 	XKBKeyDown   = 0xff54
