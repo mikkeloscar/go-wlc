@@ -21,6 +21,15 @@ void char_array_free(char **arr) {
 	}
 	free(arr);
 }
+
+wlc_handle *handle_array_init(size_t len) {
+	wlc_handle *arr = malloc(len * sizeof(wlc_handle));
+	return arr;
+}
+
+void handle_array_insert(wlc_handle *arr, wlc_handle item, int index) {
+	arr[index] = item;
+}
 */
 import "C"
 
@@ -50,4 +59,13 @@ func handlesCArraytoGoSlice(handles *C.wlc_handle, len int) []Handle {
 	}
 
 	return goHandles
+}
+
+func handlesSliceToCArray(arr []Handle) (*C.wlc_handle, C.size_t) {
+	carr := C.handle_array_init(C.size_t(len(arr)))
+	for i, h := range arr {
+		C.handle_array_insert(carr, C.wlc_handle(h), C.int(i))
+	}
+
+	return carr, C.size_t(len(arr))
 }

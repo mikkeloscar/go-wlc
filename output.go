@@ -82,8 +82,8 @@ func OutputGetMutableViews(output Handle) []Handle {
 // OutputSetViews sets views in stack order. This will also change mutable
 // views. Returns false on failure.
 func OutputSetViews(output Handle, views []Handle) bool {
-	// TODO: check that this works (passing views)
-	return bool(C.wlc_output_set_views(C.wlc_handle(output), (*C.wlc_handle)(&views[0]), C.size_t(len(views))))
+	cviews, len := handlesSliceToCArray(views)
+	return bool(C.wlc_output_set_views(C.wlc_handle(output), cviews, len))
 }
 
 // OutputFocus focuses output. Pass zero for no focus.
