@@ -6,14 +6,17 @@ package wlc
 */
 import "C"
 
+// Handle is a wlc_handle which is a uint describing an object in wlc. It could
+// be an output, view etc.
 type Handle C.wlc_handle
 
+// EventSource is a reference to struct wlc_event_source which is handled
+// internally by wlc.
 type EventSource *C.struct_wlc_event_source
 
 // type XKBState *C.struct_xkb_state
 // type XKBKeymap *C.struct_xkb_keymap
-
-type InputDevice *C.struct_libinput_device
+// type InputDevice *C.struct_libinput_device
 
 type LogType C.enum_wlc_log_type
 
@@ -127,6 +130,7 @@ const (
 	TouchCancel
 )
 
+// Modifiers describes the state of keyboard modifiers in various functions.
 type Modifiers struct {
 	Leds uint32
 	Mods uint32
