@@ -84,8 +84,8 @@ type Interface struct {
 		Ready func()
 	}
 	Input struct {
-		Created   func(InputDevice) bool
-		Destroyed func(InputDevice)
+		Created   func(*C.struct_libinput_device) bool
+		Destroyed func(*C.struct_libinput_device)
 	}
 }
 
@@ -250,10 +250,10 @@ func _go_handle_compositor_ready() {
 
 //export _go_handle_input_created
 func _go_handle_input_created(device *C.struct_libinput_device) C._Bool {
-	return C._Bool(wlcInterface.Input.Created(InputDevice(device)))
+	return C._Bool(wlcInterface.Input.Created(device))
 }
 
 //export _go_handle_input_destroyed
 func _go_handle_input_destroyed(device *C.struct_libinput_device) {
-	wlcInterface.Input.Destroyed(InputDevice(device))
+	wlcInterface.Input.Destroyed(device)
 }
