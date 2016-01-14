@@ -6,8 +6,10 @@ Go bindings for [wlc](http://github.com/Cloudef/wlc).
 
 ## Example
 
-The example is a port of the example found in the wlc repo. To try it just run:
+An example can be found in `example/example.go`. It is a port of the
+[example](https://github.com/Cloudef/wlc/blob/master/example/example.c)
+found in the wlc repo. Run it with:
 
 ```
-$ cd example && go run example.go
+$ go run example/example.go
 ```
