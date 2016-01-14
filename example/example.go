@@ -131,7 +131,7 @@ func (c *Compositor) relayout(output wlc.Handle) {
 			geometry.Size.W = r.W
 		}
 
-		wlc.ViewSetGeometry(view, 0, &geometry)
+		wlc.ViewSetGeometry(view, 0, geometry)
 
 		toggle = !toggle
 		if !toggle {
@@ -259,17 +259,17 @@ func (c *Compositor) PointerMotion(view wlc.Handle, time uint32, pos *wlc.Point)
 				g.Size.H = n.Size.H
 			}
 
-			wlc.ViewSetGeometry(c.action.view, c.action.edges, g)
+			wlc.ViewSetGeometry(c.action.view, c.action.edges, *g)
 		} else {
 			g.Origin.X += dx
 			g.Origin.Y += dy
-			wlc.ViewSetGeometry(c.action.view, 0, g)
+			wlc.ViewSetGeometry(c.action.view, 0, *g)
 		}
 
 		c.action.grab = *pos
 	}
 
-	wlc.PointerSetPosition(pos)
+	wlc.PointerSetPosition(*pos)
 	if c.action != nil {
 		return true
 	}

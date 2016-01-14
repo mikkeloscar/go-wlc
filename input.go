@@ -67,7 +67,7 @@ func PointerGetPosition() *Point {
 }
 
 // PointerSetPosition sets pointer position.
-func PointerSetPosition(pos *Point) {
+func PointerSetPosition(pos Point) {
 	cpos := pos.c()
 	defer C.free(unsafe.Pointer(cpos))
 	C.wlc_pointer_set_position(cpos)

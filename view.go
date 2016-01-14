@@ -65,9 +65,9 @@ func ViewGetGeometry(view Handle) *Geometry {
 	return geometryCtoGo(cgeometry)
 }
 
-// ViewSetGeometry sets geomatry. Set edges if the geometry change is caused by
+// ViewSetGeometry sets geometry. Set edges if the geometry change is caused by
 // interactive resize.
-func ViewSetGeometry(view Handle, edges uint32, geometry *Geometry) {
+func ViewSetGeometry(view Handle, edges uint32, geometry Geometry) {
 	cgeometry := geometry.c()
 	defer C.free(unsafe.Pointer(cgeometry))
 	C.wlc_view_set_geometry(C.wlc_handle(view), C.uint32_t(edges), cgeometry)
