@@ -32,15 +32,15 @@ func HandleFromWLSurfaceResource(resource *C.struct_wl_resource) Resource {
 	return Resource(C.wlc_handle_from_wl_surface_resource(resource))
 }
 
-// ViewGetSurface returns internal wlc surface from view Handle.
-func ViewGetSurface(view Handle) Resource {
-	return Resource(C.wlc_view_get_surface(C.wlc_handle(view)))
-}
-
 // SurfaceGetSize gets surface size.
 func SurfaceGetSize(surface Resource) *Size {
 	csize := C.wlc_surface_get_size(C.wlc_resource(surface))
 	return sizeCtoGo(csize)
+}
+
+// SurfaceGetWLResource returns wl_surface resource from internal wlc surface.
+func SurfaceGetWLResource(surface Resource) *C.struct_wl_resource {
+	return C.wlc_surface_get_wl_resource(C.wlc_resource(surface))
 }
 
 // SurfaceRender for rendering surfaces inside post / pre render hooks.
@@ -48,4 +48,22 @@ func SurfaceRender(surface Resource, geometry Geometry) {
 	cgeometry := geometry.c()
 	defer C.free(unsafe.Pointer(cgeometry))
 	C.wlc_surface_render(C.wlc_resource(surface), cgeometry)
+}
+
+// ViewFromSurface turns wl_surface into a wlc view. Returns 0 on failure.
+// This will also trigger view.created callback as any view would.
+func ViewFromSurface(surface Resource, client *C.struct_wl_client, interf *C.struct_wl_interface, implementation unsafe.Pointer) Handle {
+	return Handle(C.wlc_view_from_surface(C.wlc_resource(surface), client, interf, implementation))
+}
+
+// ViewGetSurface returns internal wlc surface from view handle.
+func ViewGetSurface(view Handle) Resource {
+	return Resource(C.wlc_view_get_surface(C.wlc_handle(view)))
+}
+
+// ViewGetRole returns surface role resource from view handle. Return value
+// will be nil if the view was not assigned role or created with
+// ViewCreateFromSurface().
+func ViewGetRole(view Handle) *C.struct_wl_resource {
+	return C.wlc_view_get_role(C.wlc_handle(view))
 }
