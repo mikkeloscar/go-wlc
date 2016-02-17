@@ -62,7 +62,7 @@ func ViewSetMask(view Handle, mask uint32) {
 // ViewGetGeometry gets current geometry.
 func ViewGetGeometry(view Handle) *Geometry {
 	cgeometry := C.wlc_view_get_geometry(C.wlc_handle(view))
-	return geometryCtoGo(cgeometry)
+	return geometryCtoGo(&Geometry{}, cgeometry)
 }
 
 // ViewSetGeometry sets geometry. Set edges if the geometry change is caused by

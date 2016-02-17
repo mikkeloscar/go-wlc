@@ -43,17 +43,19 @@ func SurfaceGetWLResource(surface Resource) *C.struct_wl_resource {
 	return C.wlc_surface_get_wl_resource(C.wlc_resource(surface))
 }
 
-// SurfaceRender for rendering surfaces inside post / pre render hooks.
-func SurfaceRender(surface Resource, geometry Geometry) {
-	cgeometry := geometry.c()
-	defer C.free(unsafe.Pointer(cgeometry))
-	C.wlc_surface_render(C.wlc_resource(surface), cgeometry)
-}
-
 // ViewFromSurface turns wl_surface into a wlc view. Returns 0 on failure.
 // This will also trigger view.created callback as any view would.
-func ViewFromSurface(surface Resource, client *C.struct_wl_client, interf *C.struct_wl_interface, implementation unsafe.Pointer) Handle {
-	return Handle(C.wlc_view_from_surface(C.wlc_resource(surface), client, interf, implementation))
+func ViewFromSurface(surface Resource, client *C.struct_wl_client, interf *C.struct_wl_interface, implementation unsafe.Pointer, version, id uint32, userdata unsafe.Pointer) Handle {
+	return Handle(
+		C.wlc_view_from_surface(
+			C.wlc_resource(surface),
+			client,
+			interf,
+			implementation,
+			C.uint32_t(version),
+			C.uint32_t(id),
+			userdata,
+		))
 }
 
 // ViewGetSurface returns internal wlc surface from view handle.

@@ -32,6 +32,7 @@ extern bool handle_pointer_motion(wlc_handle view, uint32_t time, const struct w
 extern bool handle_touch_touch(wlc_handle view, uint32_t time, const struct wlc_modifiers*, enum wlc_touch_type, int32_t slot, const struct wlc_point*);
 // compositor
 extern void handle_compositor_ready(void);
+extern void handle_compositor_terminate(void);
 // input
 extern bool handle_input_created(struct libinput_device *device);
 extern void handle_input_destroyed(struct libinput_device *device);
@@ -81,7 +82,8 @@ type Interface struct {
 		Touch func(Handle, uint32, Modifiers, TouchType, int32, *Point) bool
 	}
 	Compositor struct {
-		Ready func()
+		Ready     func()
+		Terminate func()
 	}
 	Input struct {
 		Created   func(*C.struct_libinput_device) bool
@@ -145,7 +147,7 @@ func _go_handle_view_move_to_output(view C.wlc_handle, fromOutput C.wlc_handle, 
 
 //export _go_handle_view_geometry_request
 func _go_handle_view_geometry_request(view C.wlc_handle, geometry *C.struct_wlc_geometry) {
-	wlcInterface.View.Request.Geometry(Handle(view), geometryCtoGo(geometry))
+	wlcInterface.View.Request.Geometry(Handle(view), geometryCtoGo(&Geometry{}, geometry))
 }
 
 //export _go_handle_view_state_request
@@ -244,6 +246,11 @@ func _go_handle_touch_touch(view C.wlc_handle, time C.uint32_t, modifiers *C.str
 //export _go_handle_compositor_ready
 func _go_handle_compositor_ready() {
 	wlcInterface.Compositor.Ready()
+}
+
+//export _go_handle_compositor_terminate
+func _go_handle_compositor_terminate() {
+	wlcInterface.Compositor.Terminate()
 }
 
 // input wrapper

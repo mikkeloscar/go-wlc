@@ -145,6 +145,7 @@ func (c *Compositor) OutputResolution(output wlc.Handle, from *wlc.Size, to *wlc
 }
 
 func (c *Compositor) ViewCreated(view wlc.Handle) bool {
+	wlc.ViewSetMask(view, wlc.OutputGetMask(wlc.ViewGetOutput(view)))
 	wlc.ViewBringToFront(view)
 	wlc.ViewFocus(view)
 	c.relayout(wlc.ViewGetOutput(view))

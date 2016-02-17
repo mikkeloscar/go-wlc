@@ -60,8 +60,6 @@ func OutputSetMask(output Handle, mask uint32) {
 	C.wlc_output_set_mask(C.wlc_handle(output), C.uint32_t(mask))
 }
 
-// TODO: output_get_pixels
-
 // OutputGetViews gets views in stack order.
 func OutputGetViews(output Handle) []Handle {
 	var len C.size_t

@@ -149,6 +149,10 @@ void handle_compositor_ready(void) {
 	_go_handle_compositor_ready();
 }
 
+void handle_compositor_terminate(void) {
+	_go_handle_compositor_terminate();
+}
+
 /* input */
 bool handle_input_created(struct libinput_device *device) {
 	return _go_handle_input_created(device);
@@ -265,13 +269,17 @@ void init_interface(uint32_t mask) {
 		interface_wlc.compositor.ready = handle_compositor_ready;
 	}
 
+	if ((mask & (1 << 22)) != 0) {
+		interface_wlc.compositor.terminate = handle_compositor_terminate;
+	}
+
 	/* input */
 
-	if ((mask & (1 << 22)) != 0) {
+	if ((mask & (1 << 23)) != 0) {
 		interface_wlc.input.created = handle_input_created;
 	}
 
-	if ((mask & (1 << 23)) != 0) {
+	if ((mask & (1 << 24)) != 0) {
 		interface_wlc.input.destroyed = handle_input_destroyed;
 	}
 }

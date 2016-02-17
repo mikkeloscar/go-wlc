@@ -85,12 +85,11 @@ func (g *Geometry) c() *C.struct_wlc_geometry {
 	)
 }
 
-func geometryCtoGo(c *C.struct_wlc_geometry) *Geometry {
+func geometryCtoGo(g *Geometry, c *C.struct_wlc_geometry) *Geometry {
 	if c != nil {
-		return &Geometry{
-			Origin: *pointCtoGo((*C.struct_wlc_point)(&(*c).origin)),
-			Size:   *sizeCtoGo((*C.struct_wlc_size)(&(*c).size)),
-		}
+		g.Origin = *pointCtoGo((*C.struct_wlc_point)(&(*c).origin))
+		g.Size = *sizeCtoGo((*C.struct_wlc_size)(&(*c).size))
+		return g
 	}
 
 	return nil

@@ -143,13 +143,17 @@ func Init(i *Interface) bool {
 		enableMask |= 1 << 21
 	}
 
-	// input
-	if i.Input.Created != nil {
+	if i.Compositor.Terminate != nil {
 		enableMask |= 1 << 22
 	}
 
-	if i.Input.Destroyed != nil {
+	// input
+	if i.Input.Created != nil {
 		enableMask |= 1 << 23
+	}
+
+	if i.Input.Destroyed != nil {
+		enableMask |= 1 << 24
 	}
 
 	// init wlc_interface struct
