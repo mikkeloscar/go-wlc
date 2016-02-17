@@ -13,6 +13,10 @@ extern void wrap_wlc_log_set_handler();
 extern int event_loop_fd_cb(int fd, uint32_t mask, void *arg);
 extern struct wlc_event_source *wrap_wlc_event_loop_add_fd(int fd, uint32_t mask);
 
+// handle wlc_event_loop_add_timer callback.
+extern int event_loop_timer_cb(void *arg);
+extern struct wlc_event_source *wrap_wlc_event_loop_add_timer(uint32_t id);
+
 // internal wlc_interface reference.
 extern struct wlc_interface interface_wlc;
 extern void init_interface(uint32_t mask);
@@ -20,7 +24,9 @@ extern void init_interface(uint32_t mask);
 import "C"
 
 import (
+	"math/rand"
 	"os"
+	"time"
 	"unsafe"
 )
 
@@ -226,7 +232,42 @@ func EventLoopAddFd(fd int, mask uint32, cb func(int, uint32, interface{}), arg 
 	))
 }
 
-// TODO wlc_event_loop_add_timer*
+type timerEvent struct {
+	cb  func(interface{})
+	arg interface{}
+}
+
+var eventLoopTimer = make(map[uint32]timerEvent)
+var timerEventRand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func timerEventID() uint32 {
+	for {
+		id := timerEventRand.Uint32()
+		if _, ok := eventLoopTimer[id]; !ok {
+			return id
+		}
+	}
+
+	// will never happen
+	return 0
+}
+
+//export _go_event_loop_timer_cb
+func _go_event_loop_timer_cb(id C.int32_t) {
+	if event, ok := eventLoopTimer[uint32(id)]; ok {
+		event.cb(event.arg)
+	}
+}
+
+// EventLoopAddTimer adds timer to event loop.
+func EventLoopAddTimer(cb func(interface{}), arg interface{}) EventSource {
+	id := timerEventID()
+	eventLoopTimer[id] = timerEvent{
+		cb:  cb,
+		arg: arg,
+	}
+	return EventSource(C.wrap_wlc_event_loop_add_timer(C.uint32_t(id)))
+}
 
 // EventSourceTimerUpdate updates timer to trigger after delay.
 // Returns true on success.

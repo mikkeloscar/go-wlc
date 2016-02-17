@@ -20,3 +20,11 @@ int event_loop_fd_cb(int fd, uint32_t mask, void *arg) {
 struct wlc_event_source *wrap_wlc_event_loop_add_fd(int fd, uint32_t mask) {
 	wlc_event_loop_add_fd(fd, mask, event_loop_fd_cb, NULL);
 }
+
+int event_loop_timer_cb(void *arg) {
+	_go_event_loop_timer_cb(*((uint32_t*)arg));
+}
+
+struct wlc_event_source *wrap_wlc_event_loop_add_timer(uint32_t id) {
+	wlc_event_loop_add_timer(event_loop_timer_cb, &id);
+}
