@@ -42,10 +42,9 @@ func LogSetHandler(handler func(LogType, string)) {
 //
 // Init's purpose is to initialize and drop privileges as soon as possible.
 //
-// TODO:
-// You can pass argc and argv from main(), so wlc can rename the process it
-// forks to cleanup crashed parent process and do FD passing (non-logind).
-func Init(i *Interface) bool {
+// You can pass os.Args, so wlc can rename the process it forks to cleanup
+// crashed parent process and do FD passing (non-logind).
+func Init(i *Interface, args []string) bool {
 	wlcInterface = i
 	var enableMask uint32 = 0
 
@@ -159,7 +158,7 @@ func Init(i *Interface) bool {
 	// init wlc_interface struct
 	C.init_interface(C.uint32_t(enableMask))
 
-	return bool(C.wlc_init(&C.interface_wlc, 0, nil))
+	return bool(C.wlc_init(&C.interface_wlc, C.int(len(args)), strSlicetoCArray(args)))
 }
 
 // Terminate wlc.
