@@ -19,7 +19,10 @@ extern void init_interface(uint32_t mask);
 */
 import "C"
 
-import "unsafe"
+import (
+	"os"
+	"unsafe"
+)
 
 var logHandler func(LogType, string)
 
@@ -41,10 +44,7 @@ func LogSetHandler(handler func(LogType, string)) {
 // to be suid.
 //
 // Init's purpose is to initialize and drop privileges as soon as possible.
-//
-// You can pass os.Args, so wlc can rename the process it forks to cleanup
-// crashed parent process and do FD passing (non-logind).
-func Init(i *Interface, args []string) bool {
+func Init(i *Interface) bool {
 	wlcInterface = i
 	var enableMask uint32 = 0
 
@@ -158,7 +158,7 @@ func Init(i *Interface, args []string) bool {
 	// init wlc_interface struct
 	C.init_interface(C.uint32_t(enableMask))
 
-	return bool(C.wlc_init(&C.interface_wlc, C.int(len(args)), strSlicetoCArray(args)))
+	return bool(C.wlc_init(&C.interface_wlc, C.int(len(os.Args)), strSlicetoCArray(os.Args)))
 }
 
 // Terminate wlc.

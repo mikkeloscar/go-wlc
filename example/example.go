@@ -298,7 +298,7 @@ func main() {
 	interf.Pointer.Button = compositor.PointerButton
 	interf.Pointer.Motion = compositor.PointerMotion
 
-	if !wlc.Init(&interf, os.Args) {
+	if !wlc.Init(&interf) {
 		os.Exit(1)
 	}
 
