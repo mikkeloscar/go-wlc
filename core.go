@@ -207,8 +207,9 @@ func HandleGetUserData(handle Handle) unsafe.Pointer {
 }
 
 type fdEvent struct {
-	cb  func(int, uint32, interface{})
-	arg interface{}
+	cb     func(int, uint32, interface{})
+	arg    interface{}
+	source EventSource
 }
 
 var eventLoopFd = make(map[int]fdEvent)
@@ -222,19 +223,26 @@ func _go_event_loop_fd_cb(fd C.int, mask C.uint32_t) {
 
 // EventLoopAddFd adds fd to event loop.
 func EventLoopAddFd(fd int, mask uint32, cb func(int, uint32, interface{}), arg interface{}) EventSource {
-	eventLoopFd[fd] = fdEvent{
-		cb:  cb,
-		arg: arg,
-	}
-	return EventSource(C.wrap_wlc_event_loop_add_fd(
+	source := EventSource(C.wrap_wlc_event_loop_add_fd(
 		C.int(fd),
 		C.uint32_t(mask),
 	))
+
+	if source != nil {
+		eventLoopFd[fd] = fdEvent{
+			cb:     cb,
+			arg:    arg,
+			source: source,
+		}
+	}
+
+	return source
 }
 
 type timerEvent struct {
-	cb  func(interface{})
-	arg interface{}
+	cb     func(interface{})
+	arg    interface{}
+	source EventSource
 }
 
 var eventLoopTimer = make(map[uint32]timerEvent)
@@ -262,11 +270,18 @@ func _go_event_loop_timer_cb(id C.int32_t) {
 // EventLoopAddTimer adds timer to event loop.
 func EventLoopAddTimer(cb func(interface{}), arg interface{}) EventSource {
 	id := timerEventID()
-	eventLoopTimer[id] = timerEvent{
-		cb:  cb,
-		arg: arg,
+
+	source := EventSource(C.wrap_wlc_event_loop_add_timer(C.uint32_t(id)))
+
+	if source != nil {
+		eventLoopTimer[id] = timerEvent{
+			cb:     cb,
+			arg:    arg,
+			source: source,
+		}
 	}
-	return EventSource(C.wrap_wlc_event_loop_add_timer(C.uint32_t(id)))
+
+	return source
 }
 
 // EventSourceTimerUpdate updates timer to trigger after delay.
@@ -280,5 +295,22 @@ func EventSourceTimerUpdate(source EventSource, ms_delay int32) bool {
 
 // EventSourceRemove removes event source from event loop.
 func EventSourceRemove(source EventSource) {
+	found := false
+
+	for fd, event := range eventLoopFd {
+		if source == event.source {
+			found = true
+			delete(eventLoopFd, fd)
+			break
+		}
+	}
+
+	if !found {
+		for id, event := range eventLoopFd {
+			if source == event.source {
+				delete(eventLoopFd, id)
+			}
+		}
+	}
 	C.wlc_event_source_remove(source)
 }
