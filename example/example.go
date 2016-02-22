@@ -196,7 +196,7 @@ func (c *Compositor) KeyboardKey(view wlc.View, time uint32, modifiers wlc.Modif
 			if len(term) == 0 {
 				term = "weston-terminal"
 			}
-			wlc.Exec(term, nil)
+			wlc.Exec(term)
 			return true
 		}
 	}
