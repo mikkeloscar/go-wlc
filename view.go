@@ -9,7 +9,7 @@ import "C"
 
 import "unsafe"
 
-// View is a wlc_handle which is a uint describing a view object in wlc.
+// View is a wlc_handle describing a view object in wlc.
 type View C.wlc_handle
 
 // Focus focuses view. Pass zero for no focus.

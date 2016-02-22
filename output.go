@@ -9,7 +9,7 @@ import "C"
 
 import "unsafe"
 
-// Output is a wlc_handle which is a uint describing an output object in wlc.
+// Output is a wlc_handle describing an output object in wlc.
 type Output C.wlc_handle
 
 // GetOutputs gets a list of outputs.
