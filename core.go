@@ -249,15 +249,16 @@ var eventLoopTimer = make(map[uint32]timerEvent)
 var timerEventRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func timerEventID() uint32 {
+	newID := uint32(0)
 	for {
 		id := timerEventRand.Uint32()
 		if _, ok := eventLoopTimer[id]; !ok {
-			return id
+			newID = id
+			break
 		}
 	}
 
-	// will never happen
-	return 0
+	return newID
 }
 
 //export _go_event_loop_timer_cb
