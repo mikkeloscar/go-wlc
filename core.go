@@ -197,12 +197,12 @@ func Run() {
 
 // HandleSetUserData can be used to link custom data to handle.
 // Client must allocate and handle the data as some C type.
-func HandleSetUserData(handle Handle, userdata unsafe.Pointer) {
+func HandleSetUserData(handle View, userdata unsafe.Pointer) {
 	C.wlc_handle_set_user_data(C.wlc_handle(handle), userdata)
 }
 
 // HandleGetUserData gets custom linked user data from handle.
-func HandleGetUserData(handle Handle) unsafe.Pointer {
+func HandleGetUserData(handle View) unsafe.Pointer {
 	return C.wlc_handle_get_user_data(C.wlc_handle(handle))
 }
 

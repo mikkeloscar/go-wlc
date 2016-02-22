@@ -35,6 +35,13 @@ import "C"
 
 import "unsafe"
 
+type handleType uint8
+
+const (
+	viewHandle handleType = iota
+	outputHandle
+)
+
 // Initialize a C NULL terminated *char[] from a []string
 func strSlicetoCArray(arr []string) **C.char {
 	carr := C.char_array_init(C.size_t(len(arr) + 1))
@@ -50,18 +57,29 @@ func freeCStrArray(arr **C.char) {
 	C.char_array_free(arr)
 }
 
-func handlesCArraytoGoSlice(handles *C.wlc_handle, len int) []Handle {
-	goHandles := make([]Handle, len)
+func outputHandlesCArraytoGoSlice(handles *C.wlc_handle, len int) []Output {
+	goHandles := make([]Output, len)
 	size := int(unsafe.Sizeof(*handles))
 	for i := 0; i < len; i++ {
 		ptr := unsafe.Pointer(uintptr(unsafe.Pointer(handles)) + uintptr(size*i))
-		goHandles[i] = *(*Handle)(ptr)
+		goHandles[i] = *(*Output)(ptr)
 	}
 
 	return goHandles
 }
 
-func handlesSliceToCArray(arr []Handle) (*C.wlc_handle, C.size_t) {
+func viewHandlesCArraytoGoSlice(handles *C.wlc_handle, len int) []View {
+	goHandles := make([]View, len)
+	size := int(unsafe.Sizeof(*handles))
+	for i := 0; i < len; i++ {
+		ptr := unsafe.Pointer(uintptr(unsafe.Pointer(handles)) + uintptr(size*i))
+		goHandles[i] = *(*View)(ptr)
+	}
+
+	return goHandles
+}
+
+func viewHandlesSliceToCArray(arr []View) (*C.wlc_handle, C.size_t) {
 	carr := C.handle_array_init(C.size_t(len(arr)))
 	for i, h := range arr {
 		C.handle_array_insert(carr, C.wlc_handle(h), C.int(i))

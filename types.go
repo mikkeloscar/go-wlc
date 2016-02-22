@@ -6,10 +6,6 @@ package wlc
 */
 import "C"
 
-// Handle is a wlc_handle which is a uint describing an object in wlc. It could
-// be an output, view etc.
-type Handle C.wlc_handle
-
 // EventSource is a reference to struct wlc_event_source which is handled
 // internally by wlc.
 type EventSource *C.struct_wlc_event_source

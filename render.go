@@ -45,9 +45,9 @@ func SurfaceRender(surface Resource, geometry Geometry) {
 	C.wlc_surface_render(C.wlc_resource(surface), cgeometry)
 }
 
-// OutputScheduleRender schedules output for rendering next frame.
+// ScheduleRender schedules output for rendering next frame.
 // If output was already scheduled this is no-op, if output is currently
 // rendering, it will render immediately after.
-func OutputScheduleRender(output Handle) {
-	C.wlc_output_schedule_render(C.wlc_handle(output))
+func (o Output) ScheduleRender() {
+	C.wlc_output_schedule_render(C.wlc_handle(o))
 }

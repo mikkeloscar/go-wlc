@@ -9,114 +9,117 @@ import "C"
 
 import "unsafe"
 
-// ViewFocus focuses view. Pass zero for no focus.
-func ViewFocus(view Handle) {
-	C.wlc_view_focus(C.wlc_handle(view))
+// View is a wlc_handle which is a uint describing a view object in wlc.
+type View C.wlc_handle
+
+// Focus focuses view. Pass zero for no focus.
+func (v View) Focus() {
+	C.wlc_view_focus(C.wlc_handle(v))
 }
 
-// ViewClose closes view.
-func ViewClose(view Handle) {
-	C.wlc_view_close(C.wlc_handle(view))
+// Close closes view.
+func (v View) Close() {
+	C.wlc_view_close(C.wlc_handle(v))
 }
 
-// ViewGetOutput gets output of view.
-func ViewGetOutput(view Handle) Handle {
-	return Handle(C.wlc_view_get_output(C.wlc_handle(view)))
+// GetOutput gets output of view.
+func (v View) GetOutput() Output {
+	return Output(C.wlc_view_get_output(C.wlc_handle(v)))
 }
 
-// ViewSetOutput sets output for view. Alternatively OutputSetViews can be used.
-func ViewSetOutput(view Handle, output Handle) {
-	C.wlc_view_set_output(C.wlc_handle(view), C.wlc_handle(output))
+// SetOutput sets output for view. Alternatively OutputSetViews can be used.
+func (v View) SetOutput(output Output) {
+	C.wlc_view_set_output(C.wlc_handle(v), C.wlc_handle(output))
 }
 
-// ViewSendToBack sends view behind everything.
-func ViewSendToBack(view Handle) {
-	C.wlc_view_send_to_back(C.wlc_handle(view))
+// SendToBack sends view behind everything.
+func (v View) SendToBack() {
+	C.wlc_view_send_to_back(C.wlc_handle(v))
 }
 
-// ViewSendBelow sends view below another view.
-func ViewSendBelow(view Handle, other Handle) {
-	C.wlc_view_send_below(C.wlc_handle(view), C.wlc_handle(other))
+// SendBelow sends view below another view.
+func (v View) SendBelow(other View) {
+	C.wlc_view_send_below(C.wlc_handle(v), C.wlc_handle(other))
 }
 
-// ViewBringAbove brings view above another view.
-func ViewBringAbove(view Handle, other Handle) {
-	C.wlc_view_bring_above(C.wlc_handle(view), C.wlc_handle(other))
+// BringAbove brings view above another view.
+func (v View) BringAbove(other View) {
+	C.wlc_view_bring_above(C.wlc_handle(v), C.wlc_handle(other))
 }
 
-// ViewBringToFront brings view to front of everything.
-func ViewBringToFront(view Handle) {
-	C.wlc_view_bring_to_front(C.wlc_handle(view))
+// BringToFront brings view to front of everything.
+func (v View) BringToFront() {
+	C.wlc_view_bring_to_front(C.wlc_handle(v))
 }
 
-// ViewGetMask gets current visibility bitmask.
-func ViewGetMask(view Handle) uint32 {
-	return uint32(C.wlc_view_get_mask(C.wlc_handle(view)))
+// GetMask gets current visibility bitmask.
+func (v View) GetMask() uint32 {
+	return uint32(C.wlc_view_get_mask(C.wlc_handle(v)))
 }
 
-// ViewSetMask sets visibility bitmask.
-func ViewSetMask(view Handle, mask uint32) {
-	C.wlc_view_set_mask(C.wlc_handle(view), C.uint32_t(mask))
+// SetMask sets visibility bitmask.
+func (v View) SetMask(mask uint32) {
+	C.wlc_view_set_mask(C.wlc_handle(v), C.uint32_t(mask))
 }
 
-// ViewGetGeometry gets current geometry.
-func ViewGetGeometry(view Handle) *Geometry {
-	cgeometry := C.wlc_view_get_geometry(C.wlc_handle(view))
+// GetGeometry gets current geometry.
+func (v View) GetGeometry() *Geometry {
+	cgeometry := C.wlc_view_get_geometry(C.wlc_handle(v))
 	return geometryCtoGo(&Geometry{}, cgeometry)
 }
 
-// ViewSetGeometry sets geometry. Set edges if the geometry change is caused by
+// SetGeometry sets geometry. Set edges if the geometry change is caused by
 // interactive resize.
-func ViewSetGeometry(view Handle, edges uint32, geometry Geometry) {
+func (v View) SetGeometry(edges uint32, geometry Geometry) {
 	cgeometry := geometry.c()
 	defer C.free(unsafe.Pointer(cgeometry))
-	C.wlc_view_set_geometry(C.wlc_handle(view), C.uint32_t(edges), cgeometry)
+	C.wlc_view_set_geometry(C.wlc_handle(v), C.uint32_t(edges), cgeometry)
 }
 
-// ViewGetType gets type bitfield for view.
-func ViewGetType(view Handle) uint32 {
-	return uint32(C.wlc_view_get_type(C.wlc_handle(view)))
+// GetType gets type bitfield for view.
+func (v View) GetType() uint32 {
+	return uint32(C.wlc_view_get_type(C.wlc_handle(v)))
 }
 
-// ViewSetType sets type bit. TOggle indicates whether it is set or not.
-func ViewSetType(view Handle, typ ViewTypeBit, toggle bool) {
-	C.wlc_view_set_type(C.wlc_handle(view), uint32(typ), C._Bool(toggle))
+// SetType sets type bit. TOggle indicates whether it is set or not.
+func (v View) SetType(typ ViewTypeBit, toggle bool) {
+	C.wlc_view_set_type(C.wlc_handle(v), uint32(typ), C._Bool(toggle))
 }
 
-// ViewGetState gets current state bitfield.
-func ViewGetState(view Handle) uint32 {
-	return uint32(C.wlc_view_get_state(C.wlc_handle(view)))
+// GetState gets current state bitfield.
+func (v View) GetState() uint32 {
+	return uint32(C.wlc_view_get_state(C.wlc_handle(v)))
 }
 
-// ViewSetState sets state bit. Toggle indicates whether it is set or not.
-func ViewSetState(view Handle, state ViewStateBit, toggle bool) {
-	C.wlc_view_set_state(C.wlc_handle(view), uint32(state), C._Bool(toggle))
+// SetState sets state bit. Toggle indicates whether it is set or not.
+func (v View) SetState(state ViewStateBit, toggle bool) {
+	C.wlc_view_set_state(C.wlc_handle(v), uint32(state), C._Bool(toggle))
 }
 
-// ViewGetParent gets parent view.
-func ViewGetParent(view Handle) Handle {
-	return Handle(C.wlc_view_get_parent(C.wlc_handle(view)))
+// GetParent gets parent view.
+func (v View) GetParent() View {
+	return View(C.wlc_view_get_parent(C.wlc_handle(v)))
 }
 
-// ViewSetParent sets parent view.
-func ViewSetParent(view Handle, parent Handle) {
-	C.wlc_view_set_parent(C.wlc_handle(view), C.wlc_handle(parent))
+// SetParent sets parent view.
+func (v View) SetParent(parent View) {
+	C.wlc_view_set_parent(C.wlc_handle(v), C.wlc_handle(parent))
 }
 
-// ViewGetTitle gets title.
-func ViewGetTitle(view Handle) string {
-	ctitle := C.wlc_view_get_title(C.wlc_handle(view))
+// GetTitle gets title.
+func (v View) GetTitle() string {
+	ctitle := C.wlc_view_get_title(C.wlc_handle(v))
 	return C.GoString(ctitle)
 }
 
-// ViewGetClass gets class. (shell-surface only).
-func ViewGetClass(view Handle) string {
-	cclass := C.wlc_view_get_class(C.wlc_handle(view))
+// GetClass gets class. (shell-surface only).
+func (v View) GetClass() string {
+	cclass := C.wlc_view_get_class(C.wlc_handle(v))
 	return C.GoString(cclass)
 }
 
-// ViewGetAppId gets app id. (xdg-surface only).
-func ViewGetAppId(view Handle) string {
-	capp := C.wlc_view_get_app_id(C.wlc_handle(view))
+// GetAppId gets app id. (xdg-surface only).
+func (v View) GetAppId() string {
+	capp := C.wlc_view_get_app_id(C.wlc_handle(v))
 	return C.GoString(capp)
 }

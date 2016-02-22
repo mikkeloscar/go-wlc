@@ -23,12 +23,12 @@ type Compositor struct {
 }
 
 type action struct {
-	view  wlc.Handle
+	view  wlc.View
 	grab  wlc.Point
 	edges uint32
 }
 
-func (c *Compositor) startInteractiveAction(view wlc.Handle, origin wlc.Point) bool {
+func (c *Compositor) startInteractiveAction(view wlc.View, origin wlc.Point) bool {
 	if c.action != nil {
 		return false
 	}
@@ -37,16 +37,16 @@ func (c *Compositor) startInteractiveAction(view wlc.Handle, origin wlc.Point) b
 		view: view,
 		grab: origin,
 	}
-	wlc.ViewBringToFront(view)
+	view.BringToFront()
 	return true
 }
 
-func (c *Compositor) startInteractiveMove(view wlc.Handle, origin wlc.Point) {
+func (c *Compositor) startInteractiveMove(view wlc.View, origin wlc.Point) {
 	c.startInteractiveAction(view, origin)
 }
 
-func (c *Compositor) startInteractiveResize(view wlc.Handle, edges uint32, origin wlc.Point) {
-	g := wlc.ViewGetGeometry(view)
+func (c *Compositor) startInteractiveResize(view wlc.View, edges uint32, origin wlc.Point) {
+	g := view.GetGeometry()
 	if g == nil {
 		return
 	}
@@ -78,7 +78,7 @@ func (c *Compositor) startInteractiveResize(view wlc.Handle, edges uint32, origi
 
 	c.action.edges = edges
 
-	wlc.ViewSetState(view, wlc.BitResizing, true)
+	view.SetState(wlc.BitResizing, true)
 }
 
 func (c *Compositor) stopInteractiveAction() {
@@ -86,12 +86,12 @@ func (c *Compositor) stopInteractiveAction() {
 		return
 	}
 
-	wlc.ViewSetState(c.action.view, wlc.BitResizing, false)
+	c.action.view.SetState(wlc.BitResizing, false)
 	c.action = nil
 }
 
-func getTopmost(output wlc.Handle, offset int) wlc.Handle {
-	views := wlc.OutputGetViews(output)
+func getTopmost(output wlc.Output, offset int) wlc.View {
+	views := output.GetViews()
 	if offset < len(views) {
 		return views[offset]
 	}
@@ -99,13 +99,13 @@ func getTopmost(output wlc.Handle, offset int) wlc.Handle {
 	return 0
 }
 
-func (c *Compositor) relayout(output wlc.Handle) {
-	r := wlc.OutputGetResolution(output)
+func (c *Compositor) relayout(output wlc.Output) {
+	r := output.GetResolution()
 	if r == nil {
 		return
 	}
 
-	views := wlc.OutputGetViews(output)
+	views := output.GetViews()
 
 	toggle := false
 	y := 0
@@ -131,7 +131,7 @@ func (c *Compositor) relayout(output wlc.Handle) {
 			geometry.Size.W = r.W
 		}
 
-		wlc.ViewSetGeometry(view, 0, geometry)
+		view.SetGeometry(0, geometry)
 
 		toggle = !toggle
 		if !toggle {
@@ -140,48 +140,48 @@ func (c *Compositor) relayout(output wlc.Handle) {
 	}
 }
 
-func (c *Compositor) OutputResolution(output wlc.Handle, from *wlc.Size, to *wlc.Size) {
+func (c *Compositor) OutputResolution(output wlc.Output, from *wlc.Size, to *wlc.Size) {
 	c.relayout(output)
 }
 
-func (c *Compositor) ViewCreated(view wlc.Handle) bool {
-	wlc.ViewSetMask(view, wlc.OutputGetMask(wlc.ViewGetOutput(view)))
-	wlc.ViewBringToFront(view)
-	wlc.ViewFocus(view)
-	c.relayout(wlc.ViewGetOutput(view))
+func (c *Compositor) ViewCreated(view wlc.View) bool {
+	view.SetMask(view.GetOutput().GetMask())
+	view.BringToFront()
+	view.Focus()
+	c.relayout(view.GetOutput())
 	return true
 }
 
-func (c *Compositor) ViewDestroyed(view wlc.Handle) {
-	wlc.ViewFocus(getTopmost(wlc.ViewGetOutput(view), 0))
-	c.relayout(wlc.ViewGetOutput(view))
+func (c *Compositor) ViewDestroyed(view wlc.View) {
+	getTopmost(view.GetOutput(), 0).Focus()
+	c.relayout(view.GetOutput())
 }
 
-func (c *Compositor) ViewFocus(view wlc.Handle, focus bool) {
-	wlc.ViewSetState(view, wlc.BitActivated, focus)
+func (c *Compositor) ViewFocus(view wlc.View, focus bool) {
+	view.SetState(wlc.BitActivated, focus)
 }
 
-func (c *Compositor) ViewRequestMove(view wlc.Handle, origin *wlc.Point) {
+func (c *Compositor) ViewRequestMove(view wlc.View, origin *wlc.Point) {
 	c.startInteractiveMove(view, *origin)
 }
 
-func (c *Compositor) ViewRequestResize(view wlc.Handle, edges uint32, origin *wlc.Point) {
+func (c *Compositor) ViewRequestResize(view wlc.View, edges uint32, origin *wlc.Point) {
 	c.startInteractiveResize(view, edges, *origin)
 }
 
-func (c *Compositor) KeyboardKey(view wlc.Handle, time uint32, modifiers wlc.Modifiers, key uint32, state wlc.KeyState) bool {
+func (c *Compositor) KeyboardKey(view wlc.View, time uint32, modifiers wlc.Modifiers, key uint32, state wlc.KeyState) bool {
 	sym := wlc.KeyboardGetKeysymForKey(key, nil)
 
 	if state == wlc.KeyStatePressed {
 		if view != 0 {
 			if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == XKBKeyq {
-				wlc.ViewClose(view)
+				view.Close()
 				return true
 			}
 
 			if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == XKBKeyDown {
-				wlc.ViewSendToBack(view)
-				wlc.ViewFocus(getTopmost(wlc.ViewGetOutput(view), 0))
+				view.SendToBack()
+				getTopmost(view.GetOutput(), 0).Focus()
 				return true
 			}
 		}
@@ -204,9 +204,9 @@ func (c *Compositor) KeyboardKey(view wlc.Handle, time uint32, modifiers wlc.Mod
 	return false
 }
 
-func (c *Compositor) PointerButton(view wlc.Handle, time uint32, modifiers wlc.Modifiers, button uint32, state wlc.ButtonState, pos *wlc.Point) bool {
+func (c *Compositor) PointerButton(view wlc.View, time uint32, modifiers wlc.Modifiers, button uint32, state wlc.ButtonState, pos *wlc.Point) bool {
 	if state == wlc.ButtonStatePressed {
-		wlc.ViewFocus(view)
+		view.Focus()
 		if view != 0 {
 			if (modifiers.Mods&wlc.BitModCtrl != 0) && button == btnLeft {
 				c.startInteractiveMove(view, *pos)
@@ -227,11 +227,11 @@ func (c *Compositor) PointerButton(view wlc.Handle, time uint32, modifiers wlc.M
 	return false
 }
 
-func (c *Compositor) PointerMotion(view wlc.Handle, time uint32, pos *wlc.Point) bool {
+func (c *Compositor) PointerMotion(view wlc.View, time uint32, pos *wlc.Point) bool {
 	if c.action != nil {
 		dx := pos.X - c.action.grab.X
 		dy := pos.Y - c.action.grab.Y
-		g := wlc.ViewGetGeometry(c.action.view)
+		g := c.action.view.GetGeometry()
 
 		if c.action.edges != 0 {
 			min := wlc.Size{80, 40}
@@ -260,11 +260,11 @@ func (c *Compositor) PointerMotion(view wlc.Handle, time uint32, pos *wlc.Point)
 				g.Size.H = n.Size.H
 			}
 
-			wlc.ViewSetGeometry(c.action.view, c.action.edges, *g)
+			c.action.view.SetGeometry(c.action.edges, *g)
 		} else {
 			g.Origin.X += dx
 			g.Origin.Y += dy
-			wlc.ViewSetGeometry(c.action.view, 0, *g)
+			c.action.view.SetGeometry(0, *g)
 		}
 
 		c.action.grab = *pos

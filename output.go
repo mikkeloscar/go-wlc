@@ -9,82 +9,85 @@ import "C"
 
 import "unsafe"
 
+// Output is a wlc_handle which is a uint describing an output object in wlc.
+type Output C.wlc_handle
+
 // GetOutputs gets a list of outputs.
-func GetOutputs() []Handle {
+func GetOutputs() []Output {
 	var len C.size_t
 	handles := C.wlc_get_outputs(&len)
-	return handlesCArraytoGoSlice(handles, int(len))
+	return outputHandlesCArraytoGoSlice(handles, int(len))
 }
 
 // GetFocusedOutput gets focused output.
-func GetFocusedOutput() Handle {
-	return Handle(C.wlc_get_focused_output())
+func GetFocusedOutput() Output {
+	return Output(C.wlc_get_focused_output())
 }
 
-// OutputGetName gets output name.
-func OutputGetName(output Handle) string {
-	cname := C.wlc_output_get_name(C.wlc_handle(output))
+// GetName gets output name.
+func (o Output) GetName() string {
+	cname := C.wlc_output_get_name(C.wlc_handle(o))
 	return C.GoString(cname)
 }
 
-// OutputGetSleep gets output sleep state.
-func OutputGetSleep(output Handle) bool {
-	return bool(C.wlc_output_get_sleep(C.wlc_handle(output)))
+// GetSleep gets output sleep state.
+func (o Output) GetSleep() bool {
+	return bool(C.wlc_output_get_sleep(C.wlc_handle(o)))
 }
 
-// OutputSetSleep sets sleep status: wake up / sleep.
-func OutputSetSleep(output Handle, sleep bool) {
-	C.wlc_output_set_sleep(C.wlc_handle(output), C._Bool(sleep))
+// SetSleep sets sleep status: wake up / sleep.
+func (o Output) SetSleep(sleep bool) {
+	C.wlc_output_set_sleep(C.wlc_handle(o), C._Bool(sleep))
 }
 
-// OutputGetResolution gets output resolution.
-func OutputGetResolution(output Handle) *Size {
-	csize := C.wlc_output_get_resolution(C.wlc_handle(output))
+// GetResolution gets output resolution.
+func (o Output) GetResolution() *Size {
+	csize := C.wlc_output_get_resolution(C.wlc_handle(o))
 	return sizeCtoGo(csize)
 }
 
-// OutputSetResolution sets output resolution.
-func OutputSetResolution(output Handle, resolution Size) {
+// SetResolution sets output resolution.
+func (o Output) SetResolution(resolution Size) {
 	csize := resolution.c()
 	defer C.free(unsafe.Pointer(csize))
-	C.wlc_output_set_resolution(C.wlc_handle(output), csize)
+	C.wlc_output_set_resolution(C.wlc_handle(o), csize)
 }
 
-// OutputGetMask gets current visibility bitmask.
-func OutputGetMask(output Handle) uint32 {
-	return uint32(C.wlc_output_get_mask(C.wlc_handle(output)))
+// GetMask gets current visibility bitmask.
+func (o Output) GetMask() uint32 {
+	return uint32(C.wlc_output_get_mask(C.wlc_handle(o)))
 }
 
-// OuputSetMask sets visibility bitmask.
-func OutputSetMask(output Handle, mask uint32) {
-	C.wlc_output_set_mask(C.wlc_handle(output), C.uint32_t(mask))
+// SetMask sets visibility bitmask.
+func (o Output) SetMask(mask uint32) {
+	C.wlc_output_set_mask(C.wlc_handle(o), C.uint32_t(mask))
 }
 
-// OutputGetViews gets views in stack order.
-func OutputGetViews(output Handle) []Handle {
+// GetViews gets views in stack order.
+func (o Output) GetViews() []View {
 	var len C.size_t
-	handles := C.wlc_output_get_views(C.wlc_handle(output), &len)
-	return handlesCArraytoGoSlice(handles, int(len))
+	handles := C.wlc_output_get_views(C.wlc_handle(o), &len)
+	return viewHandlesCArraytoGoSlice(handles, int(len))
 }
 
-// OutputGetMutableViews gets mutable views in creation order.
+// GetMutableViews gets mutable views in creation order.
 //This is mainly useful for wm's who need another view stack for inplace
 //sorting. For example tiling wms, may want to use this to keep their tiling
 //order separated from floating order.
-func OutputGetMutableViews(output Handle) []Handle {
+func (o Output) GetMutableViews() []View {
 	var len C.size_t
-	handles := C.wlc_output_get_mutable_views(C.wlc_handle(output), &len)
-	return handlesCArraytoGoSlice(handles, int(len))
+	handles := C.wlc_output_get_mutable_views(C.wlc_handle(o), &len)
+	return viewHandlesCArraytoGoSlice(handles, int(len))
 }
 
-// OutputSetViews sets views in stack order. This will also change mutable
+// SetViews sets views in stack order. This will also change mutable
 // views. Returns false on failure.
-func OutputSetViews(output Handle, views []Handle) bool {
-	cviews, len := handlesSliceToCArray(views)
-	return bool(C.wlc_output_set_views(C.wlc_handle(output), cviews, len))
+func (o Output) SetViews(views []View) bool {
+	cviews, len := viewHandlesSliceToCArray(views)
+	return bool(C.wlc_output_set_views(C.wlc_handle(o), cviews, len))
 }
 
-// OutputFocus focuses output. Pass zero for no focus.
-func OutputFocus(output Handle) {
-	C.wlc_output_focus(C.wlc_handle(output))
+// Focus focuses output. Pass zero for no focus.
+func (o Output) Focus() {
+	C.wlc_output_focus(C.wlc_handle(o))
 }
