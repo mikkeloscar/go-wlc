@@ -118,8 +118,8 @@ func (v View) GetClass() string {
 	return C.GoString(cclass)
 }
 
-// GetAppId gets app id. (xdg-surface only).
-func (v View) GetAppId() string {
+// GetAppID gets app id. (xdg-surface only).
+func (v View) GetAppID() string {
 	capp := C.wlc_view_get_app_id(C.wlc_handle(v))
 	return C.GoString(capp)
 }
