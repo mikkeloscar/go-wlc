@@ -62,10 +62,17 @@ func (v View) SetMask(mask uint32) {
 	C.wlc_view_set_mask(C.wlc_handle(v), C.uint32_t(mask))
 }
 
-// GetGeometry gets current geometry.
+// GetGeometry gets current geometry (what the client sees).
 func (v View) GetGeometry() *Geometry {
 	cgeometry := C.wlc_view_get_geometry(C.wlc_handle(v))
 	return geometryCtoGo(&Geometry{}, cgeometry)
+}
+
+// GetVisibleGeometry gets current visible geometry (what wlc displays).
+func (v View) GetVisibleGeometry() *Geometry {
+	cgeometry := C.struct_wlc_geometry{}
+	C.wlc_view_get_visible_geometry(C.wlc_handle(v), &cgeometry)
+	return geometryCtoGo(&Geometry{}, &cgeometry)
 }
 
 // SetGeometry sets geometry. Set edges if the geometry change is caused by
