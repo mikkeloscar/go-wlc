@@ -6,16 +6,13 @@ import (
 	"os"
 
 	"github.com/mikkeloscar/go-wlc"
+	"github.com/mikkeloscar/go-xkbcommon"
 )
 
-// constants you would normally get from xkbcommon and linux/input.h
+// constants you would normally get from linux/input.h
 const (
-	XKBKeyq      = 0x0071
-	XKBKeyDown   = 0xff54
-	XKBKeyEscape = 0xff1b
-	XKBKeyReturn = 0x0ff0d
-	btnLeft      = 0x110
-	btnRight     = 0x111
+	btnLeft  = 0x110
+	btnRight = 0x111
 )
 
 type Compositor struct {
@@ -174,24 +171,24 @@ func (c *Compositor) KeyboardKey(view wlc.View, time uint32, modifiers wlc.Modif
 
 	if state == wlc.KeyStatePressed {
 		if view != 0 {
-			if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == XKBKeyq {
+			if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == xkb.Keyq {
 				view.Close()
 				return true
 			}
 
-			if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == XKBKeyDown {
+			if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == xkb.KeyDown {
 				view.SendToBack()
 				getTopmost(view.GetOutput(), 0).Focus()
 				return true
 			}
 		}
 
-		if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == XKBKeyEscape {
+		if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == xkb.KeyEscape {
 			wlc.Terminate()
 			return true
 		}
 
-		if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == XKBKeyReturn {
+		if (modifiers.Mods&wlc.BitModCtrl != 0) && sym == xkb.KeyReturn {
 			term := os.Getenv("TERMINAL")
 			if len(term) == 0 {
 				term = "weston-terminal"
