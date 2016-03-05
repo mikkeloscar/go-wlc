@@ -12,9 +12,14 @@ import "unsafe"
 // View is a wlc_handle describing a view object in wlc.
 type View C.wlc_handle
 
-// Focus focuses view. Pass zero for no focus.
+// Focus focuses view.
 func (v View) Focus() {
 	C.wlc_view_focus(C.wlc_handle(v))
+}
+
+// ViewUnfocus unfocuses all views.
+func ViewUnfocus() {
+	C.wlc_view_focus(0)
 }
 
 // Close closes view.
@@ -27,7 +32,7 @@ func (v View) GetOutput() Output {
 	return Output(C.wlc_view_get_output(C.wlc_handle(v)))
 }
 
-// SetOutput sets output for view. Alternatively OutputSetViews can be used.
+// SetOutput sets output for view. Alternatively output.SetViews() can be used.
 func (v View) SetOutput(output Output) {
 	C.wlc_view_set_output(C.wlc_handle(v), C.wlc_handle(output))
 }

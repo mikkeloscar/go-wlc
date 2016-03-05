@@ -87,7 +87,12 @@ func (o Output) SetViews(views []View) bool {
 	return bool(C.wlc_output_set_views(C.wlc_handle(o), cviews, len))
 }
 
-// Focus focuses output. Pass zero for no focus.
+// Focus focuses output.
 func (o Output) Focus() {
 	C.wlc_output_focus(C.wlc_handle(o))
+}
+
+// OutputUnfocus unfocuses all outputs.
+func OutputUnfocus() {
+	C.wlc_output_focus(0)
 }
