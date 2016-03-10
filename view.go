@@ -74,10 +74,10 @@ func (v View) GetGeometry() *Geometry {
 }
 
 // GetVisibleGeometry gets current visible geometry (what wlc displays).
-func (v View) GetVisibleGeometry() *Geometry {
+func (v View) GetVisibleGeometry() Geometry {
 	cgeometry := C.struct_wlc_geometry{}
 	C.wlc_view_get_visible_geometry(C.wlc_handle(v), &cgeometry)
-	return geometryCtoGo(&Geometry{}, &cgeometry)
+	return *geometryCtoGo(&Geometry{}, &cgeometry)
 }
 
 // SetGeometry sets geometry. Set edges if the geometry change is caused by
