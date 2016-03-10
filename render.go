@@ -41,7 +41,7 @@ func PixelsRead(format PixelFormat, geometry Geometry, outGeometry *Geometry, ou
 	geometryCtoGo(outGeometry, &cgOut)
 }
 
-// Render for rendering surfaces inside post / pre render hooks.
+// Render renders surfaces inside post / pre render hooks.
 func (s Resource) Render(geometry Geometry) {
 	cgeometry := geometry.c()
 	defer C.free(unsafe.Pointer(cgeometry))
