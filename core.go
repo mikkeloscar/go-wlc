@@ -25,7 +25,6 @@ import "C"
 
 import (
 	"math/rand"
-	"os"
 	"time"
 	"unsafe"
 )
@@ -50,121 +49,8 @@ func LogSetHandler(handler func(LogType, string)) {
 // to be suid.
 //
 // Init's purpose is to initialize and drop privileges as soon as possible.
-func Init(i *Interface) bool {
-	wlcInterface = i
-	var enableMask uint32 = 0
-
-	// output
-	if i.Output.Created != nil {
-		enableMask |= 1 << 0
-	}
-
-	if i.Output.Destroyed != nil {
-		enableMask |= 1 << 1
-	}
-
-	if i.Output.Focus != nil {
-		enableMask |= 1 << 2
-	}
-
-	if i.Output.Resolution != nil {
-		enableMask |= 1 << 3
-	}
-
-	if i.Output.Render.Pre != nil {
-		enableMask |= 1 << 4
-	}
-
-	if i.Output.Render.Post != nil {
-		enableMask |= 1 << 5
-	}
-
-	// view
-	if i.View.Created != nil {
-		enableMask |= 1 << 6
-	}
-
-	if i.View.Destroyed != nil {
-		enableMask |= 1 << 7
-	}
-
-	if i.View.Focus != nil {
-		enableMask |= 1 << 8
-	}
-
-	if i.View.MoveToOutput != nil {
-		enableMask |= 1 << 9
-	}
-
-	if i.View.Request.Geometry != nil {
-		enableMask |= 1 << 10
-	}
-
-	if i.View.Request.State != nil {
-		enableMask |= 1 << 11
-	}
-
-	if i.View.Request.Move != nil {
-		enableMask |= 1 << 12
-	}
-
-	if i.View.Request.Resize != nil {
-		enableMask |= 1 << 13
-	}
-
-	if i.View.Render.Pre != nil {
-		enableMask |= 1 << 14
-	}
-
-	if i.View.Render.Post != nil {
-		enableMask |= 1 << 15
-	}
-
-	// keyboard
-	if i.Keyboard.Key != nil {
-		enableMask |= 1 << 16
-	}
-
-	// pointer
-	if i.Pointer.Button != nil {
-		enableMask |= 1 << 17
-	}
-
-	if i.Pointer.Scroll != nil {
-		enableMask |= 1 << 18
-	}
-
-	if i.Pointer.Motion != nil {
-		enableMask |= 1 << 19
-	}
-
-	// touch
-	if i.Touch.Touch != nil {
-		enableMask |= 1 << 20
-	}
-
-	// compositor
-	if i.Compositor.Ready != nil {
-		enableMask |= 1 << 21
-	}
-
-	if i.Compositor.Terminate != nil {
-		enableMask |= 1 << 22
-	}
-
-	// input
-	if i.Input.Created != nil {
-		enableMask |= 1 << 23
-	}
-
-	if i.Input.Destroyed != nil {
-		enableMask |= 1 << 24
-	}
-
-	// init wlc_interface struct
-	C.init_interface(C.uint32_t(enableMask))
-
-	return bool(C.wlc_init(&C.interface_wlc, C.int(len(os.Args)), strSlicetoCArray(os.Args)))
+func Init() bool {
+	return bool(C.wlc_init2())
 }
 
 // Terminate wlc.

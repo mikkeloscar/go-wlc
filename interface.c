@@ -26,12 +26,12 @@ void handle_output_resolution(wlc_handle output, const struct wlc_size *from, co
 	_go_handle_output_resolution(output, &nc_from, &nc_to);
 }
 
-void handle_output_pre_render(wlc_handle output) {
-	_go_handle_output_pre_render(output);
+void handle_output_render_pre(wlc_handle output) {
+	_go_handle_output_render_pre(output);
 }
 
-void handle_output_post_render(wlc_handle output) {
-	_go_handle_output_post_render(output);
+void handle_output_render_post(wlc_handle output) {
+	_go_handle_output_render_post(output);
 }
 
 /* view */
@@ -51,7 +51,7 @@ void handle_view_move_to_output(wlc_handle view, wlc_handle from_output, wlc_han
 	_go_handle_view_move_to_output(view, from_output, to_output);
 }
 
-void handle_view_geometry_request(wlc_handle view, const struct wlc_geometry *geometry) {
+void handle_view_request_geometry(wlc_handle view, const struct wlc_geometry *geometry) {
 	struct wlc_geometry nc_geometry = {
 		.origin = {
 			.x = geometry->origin.x,
@@ -62,35 +62,35 @@ void handle_view_geometry_request(wlc_handle view, const struct wlc_geometry *ge
 			.h = geometry->size.h
 		}
 	};
-	_go_handle_view_geometry_request(view, &nc_geometry);
+	_go_handle_view_request_geometry(view, &nc_geometry);
 }
 
-void handle_view_state_request(wlc_handle view, enum wlc_view_state_bit bit, bool toggle) {
-	_go_handle_view_state_request(view, bit, toggle);
+void handle_view_request_state(wlc_handle view, enum wlc_view_state_bit bit, bool toggle) {
+	_go_handle_view_request_state(view, bit, toggle);
 }
 
-void handle_view_move_request(wlc_handle view, const struct wlc_point *point) {
+void handle_view_request_move(wlc_handle view, const struct wlc_point *point) {
 	struct wlc_point nc_point = {
 		.x = point->x,
 		.y = point->y
 	};
-	_go_handle_view_move_request(view, &nc_point);
+	_go_handle_view_request_move(view, &nc_point);
 }
 
-void handle_view_resize_request(wlc_handle view, uint32_t edges, const struct wlc_point *point) {
+void handle_view_request_resize(wlc_handle view, uint32_t edges, const struct wlc_point *point) {
 	struct wlc_point nc_point = {
 		.x = point->x,
 		.y = point->y
 	};
-	_go_handle_view_resize_request(view, edges, &nc_point);
+	_go_handle_view_request_resize(view, edges, &nc_point);
 }
 
-void handle_view_pre_render(wlc_handle view) {
-	_go_handle_view_pre_render(view);
+void handle_view_render_pre(wlc_handle view) {
+	_go_handle_view_render_pre(view);
 }
 
-void handle_view_post_render(wlc_handle view) {
-	_go_handle_view_post_render(view);
+void handle_view_render_post(wlc_handle view) {
+	_go_handle_view_render_post(view);
 }
 
 /* keyboard */
@@ -163,123 +163,105 @@ void handle_input_destroyed(struct libinput_device *device) {
 }
 
 
-struct wlc_interface interface_wlc;
 
-/**
- * Enable interface functions based on the mask.
- */
-void init_interface(uint32_t mask) {
-	/* output */
+/* Callback wrappers */
 
-	if ((mask & (1 << 0)) != 0) {
-		interface_wlc.output.created = handle_output_created;
-	}
+void set_output_created_cb() {
+	wlc_set_output_created_cb(handle_output_created);
+}
 
-	if ((mask & (1 << 1)) != 0) {
-		interface_wlc.output.destroyed = handle_output_destroyed;
-	}
+void set_output_destroyed_cb() {
+	wlc_set_output_destroyed_cb(handle_output_destroyed);
+}
 
-	if ((mask & (1 << 2)) != 0) {
-		interface_wlc.output.focus = handle_output_focus;
-	}
+void set_output_focus_cb() {
+	wlc_set_output_focus_cb(handle_output_focus);
+}
 
-	if ((mask & (1 << 3)) != 0) {
-		interface_wlc.output.resolution = handle_output_resolution;
-	}
+void set_output_resolution_cb() {
+	wlc_set_output_resolution_cb(handle_output_resolution);
+}
 
-	if ((mask & (1 << 4)) != 0) {
-		interface_wlc.output.render.pre = handle_output_pre_render;
-	}
+void set_output_render_pre_cb() {
+	wlc_set_output_render_pre_cb(handle_output_render_pre);
+}
 
-	if ((mask & (1 << 5)) != 0) {
-		interface_wlc.output.render.post = handle_output_post_render;
-	}
+void set_output_render_post_cb() {
+	wlc_set_output_render_post_cb(handle_output_render_post);
+}
 
-	/* view */
+void set_view_created_cb() {
+	wlc_set_view_created_cb(handle_view_created);
+}
 
-	if ((mask & (1 << 6)) != 0) {
-		interface_wlc.view.created = handle_view_created;
-	}
+void set_view_destroyed_cb() {
+	wlc_set_view_destroyed_cb(handle_view_destroyed);
+}
 
-	if ((mask & (1 << 7)) != 0) {
-		interface_wlc.view.destroyed = handle_view_destroyed;
-	}
+void set_view_focus_cb() {
+	wlc_set_view_focus_cb(handle_view_focus);
+}
 
-	if ((mask & (1 << 8)) != 0) {
-		interface_wlc.view.focus = handle_view_focus;
-	}
+void set_view_move_to_output_cb() {
+	wlc_set_view_move_to_output_cb(handle_view_move_to_output);
+}
 
-	if ((mask & (1 << 9)) != 0) {
-		interface_wlc.view.move_to_output = handle_view_move_to_output;
-	}
+void set_view_request_geometry_cb() {
+	wlc_set_view_request_geometry_cb(handle_view_request_geometry);
+}
 
-	if ((mask & (1 << 10)) != 0) {
-		interface_wlc.view.request.geometry = handle_view_geometry_request;
-	}
+void set_view_request_state_cb() {
+	wlc_set_view_request_state_cb(handle_view_request_state);
+}
 
-	if ((mask & (1 << 11)) != 0) {
-		interface_wlc.view.request.state = handle_view_state_request;
-	}
+void set_view_request_move_cb() {
+	wlc_set_view_request_move_cb(handle_view_request_move);
+}
 
-	if ((mask & (1 << 12)) != 0) {
-		interface_wlc.view.request.move = handle_view_move_request;
-	}
+void set_view_request_resize_cb() {
+	wlc_set_view_request_resize_cb(handle_view_request_resize);
+}
 
-	if ((mask & (1 << 13)) != 0) {
-		interface_wlc.view.request.resize = handle_view_resize_request;
-	}
+void set_view_render_pre_cb() {
+	wlc_set_view_render_pre_cb(handle_view_render_pre);
+}
 
-	if ((mask & (1 << 14)) != 0) {
-		interface_wlc.view.render.pre = handle_view_pre_render;
-	}
+void set_view_render_post_cb() {
+	wlc_set_view_render_post_cb(handle_view_render_post);
+}
 
-	if ((mask & (1 << 15)) != 0) {
-		interface_wlc.view.render.post = handle_view_post_render;
-	}
+void set_keyboard_key_cb() {
+	wlc_set_keyboard_key_cb(handle_keyboard_key);
+}
 
-	/* keyboard */
+void set_pointer_button_cb() {
+	wlc_set_pointer_button_cb(handle_pointer_button);
+}
 
-	if ((mask & (1 << 16)) != 0) {
-		interface_wlc.keyboard.key = handle_keyboard_key;
-	}
+void set_pointer_scroll_cb() {
+	wlc_set_pointer_scroll_cb(handle_pointer_scroll);
+}
 
-	/* pointer */
+void set_pointer_motion_cb() {
+	wlc_set_pointer_motion_cb(handle_pointer_motion);
+}
 
-	if ((mask & (1 << 17)) != 0) {
-		interface_wlc.pointer.button = handle_pointer_button;
-	}
+void set_touch_cb() {
+	wlc_set_touch_cb(handle_touch_touch);
+}
 
-	if ((mask & (1 << 18)) != 0) {
-		interface_wlc.pointer.scroll = handle_pointer_scroll;
-	}
+void set_compositor_ready_cb() {
+	wlc_set_compositor_ready_cb(handle_compositor_ready);
+}
 
-	if ((mask & (1 << 19)) != 0) {
-		interface_wlc.pointer.motion = handle_pointer_motion;
-	}
+void set_compositor_terminate_cb() {
+	wlc_set_compositor_terminate_cb(handle_compositor_terminate);
+}
 
-	/* touch */
+void set_input_created_cb() {
+	wlc_set_input_created_cb(handle_input_created);
+}
 
-	if ((mask & (1 << 20)) != 0) {
-		interface_wlc.touch.touch = handle_touch_touch;
-	}
-
-	/* compositor */
-
-	if ((mask & (1 << 21)) != 0) {
-		interface_wlc.compositor.ready = handle_compositor_ready;
-	}
-
-	if ((mask & (1 << 22)) != 0) {
-		interface_wlc.compositor.terminate = handle_compositor_terminate;
-	}
-
-	/* input */
-
-	if ((mask & (1 << 23)) != 0) {
-		interface_wlc.input.created = handle_input_created;
-	}
-
-	if ((mask & (1 << 24)) != 0) {
-		interface_wlc.input.destroyed = handle_input_destroyed;
-	}
+void set_input_destroyed_cb() {
+	wlc_set_input_destroyed_cb(handle_input_destroyed);
 }

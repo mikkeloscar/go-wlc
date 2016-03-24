@@ -284,18 +284,17 @@ func main() {
 
 	compositor := Compositor{}
 
-	interf := wlc.Interface{}
-	interf.Output.Resolution = compositor.OutputResolution
-	interf.View.Created = compositor.ViewCreated
-	interf.View.Destroyed = compositor.ViewDestroyed
-	interf.View.Focus = compositor.ViewFocus
-	interf.View.Request.Move = compositor.ViewRequestMove
-	interf.View.Request.Resize = compositor.ViewRequestResize
-	interf.Keyboard.Key = compositor.KeyboardKey
-	interf.Pointer.Button = compositor.PointerButton
-	interf.Pointer.Motion = compositor.PointerMotion
+	wlc.SetOutputResolutionCb(compositor.OutputResolution)
+	wlc.SetViewCreatedCb(compositor.ViewCreated)
+	wlc.SetViewDestroyedCb(compositor.ViewDestroyed)
+	wlc.SetViewFocusCb(compositor.ViewFocus)
+	wlc.SetViewRequestMoveCb(compositor.ViewRequestMove)
+	wlc.SetViewRequestResizeCb(compositor.ViewRequestResize)
+	wlc.SetKeyboardKeyCb(compositor.KeyboardKey)
+	wlc.SetPointerButtonCb(compositor.PointerButton)
+	wlc.SetPointerMotionCb(compositor.PointerMotion)
 
-	if !wlc.Init(&interf) {
+	if !wlc.Init() {
 		os.Exit(1)
 	}
 
