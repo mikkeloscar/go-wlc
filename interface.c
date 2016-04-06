@@ -34,6 +34,15 @@ void handle_output_render_post(wlc_handle output) {
 	_go_handle_output_render_post(output);
 }
 
+void handle_output_context_created(wlc_handle output) {
+	_go_handle_output_context_created(output);
+}
+
+void handle_output_context_destroyed(wlc_handle output) {
+	_go_handle_output_context_destroyed(output);
+}
+
+
 /* view */
 bool handle_view_created(wlc_handle view) {
 	return _go_handle_view_created(view);
@@ -188,6 +197,14 @@ void set_output_render_pre_cb() {
 
 void set_output_render_post_cb() {
 	wlc_set_output_render_post_cb(handle_output_render_post);
+}
+
+void set_output_context_created_cb() {
+	wlc_set_output_context_created_cb(handle_output_context_created);
+}
+
+void set_output_context_destroyed_cb() {
+	wlc_set_output_context_destroyed_cb(handle_output_context_destroyed);
 }
 
 void set_view_created_cb() {

@@ -11,6 +11,8 @@ extern void handle_output_focus(wlc_handle output, bool focus);
 extern void handle_output_resolution(wlc_handle output, const struct wlc_size *from, const struct wlc_size *to);
 extern void handle_output_pre_render(wlc_handle output);
 extern void handle_output_post_render(wlc_handle output);
+extern void handle_output_context_created(wlc_handle output);
+extern void handle_output_context_destroyed(wlc_handle output);
 // view
 extern bool handle_view_created(wlc_handle view);
 extern void handle_view_destroyed(wlc_handle view);
@@ -44,6 +46,8 @@ void set_output_focus_cb();
 void set_output_resolution_cb();
 void set_output_render_pre_cb();
 void set_output_render_post_cb();
+void set_output_context_created_cb();
+void set_output_context_destroyed_cb();
 void set_view_created_cb();
 void set_view_destroyed_cb();
 void set_view_focus_cb();
@@ -79,6 +83,10 @@ type internalInterface struct {
 		Render     struct {
 			Pre  func(Output)
 			Post func(Output)
+		}
+		Context struct {
+			Created   func(Output)
+			Destroyed func(Output)
 		}
 	}
 	View struct {
@@ -155,6 +163,20 @@ func SetOutputRenderPreCb(cb func(Output)) {
 func SetOutputRenderPostCb(cb func(Output)) {
 	wlcInterface.Output.Render.Post = cb
 	C.set_output_render_post_cb()
+}
+
+// SetOutputContextCreated sets callback to trigger when output context is
+// created. This generally happens on startup and when current tty changes.
+func SetOutputContextCreated(cb func(Output)) {
+	wlcInterface.Output.Context.Created = cb
+	C.set_output_context_created_cb()
+}
+
+// SetOutputContextDestroyed sets callback to trigger when output context is
+// destroyed.
+func SetOutputContextDestroyed(cb func(Output)) {
+	wlcInterface.Output.Context.Destroyed = cb
+	C.set_output_context_destroyed_cb()
 }
 
 // SetViewCreatedCb sets callback to trigger when view is created. Callback
@@ -323,6 +345,16 @@ func _go_handle_output_render_pre(output C.wlc_handle) {
 //export _go_handle_output_render_post
 func _go_handle_output_render_post(output C.wlc_handle) {
 	wlcInterface.Output.Render.Post(Output(output))
+}
+
+//export _go_handle_output_context_created
+func _go_handle_output_context_created(output C.wlc_handle) {
+	wlcInterface.Output.Context.Created(Output(output))
+}
+
+//export _go_handle_output_context_destroyed
+func _go_handle_output_context_destroyed(output C.wlc_handle) {
+	wlcInterface.Output.Context.Destroyed(Output(output))
 }
 
 // view wrappers
