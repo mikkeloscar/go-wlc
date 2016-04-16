@@ -50,7 +50,7 @@ func LogSetHandler(handler func(LogType, string)) {
 //
 // Init's purpose is to initialize and drop privileges as soon as possible.
 func Init() bool {
-	return bool(C.wlc_init2())
+	return bool(C.wlc_init())
 }
 
 // Terminate wlc.
