@@ -24,6 +24,7 @@ extern void handle_view_move_request(wlc_handle view, const struct wlc_point*);
 extern void handle_view_resize_request(wlc_handle view, uint32_t edges, const struct wlc_point*);
 extern void handle_view_pre_render(wlc_handle view);
 extern void handle_view_post_render(wlc_handle view);
+extern void handle_view_properties_updated(wlc_handle view, uint32_t mask);
 // keyboard
 extern bool handle_keyboard_key(wlc_handle view, uint32_t time, const struct wlc_modifiers*, uint32_t key, enum wlc_key_state);
 // pointer
@@ -58,6 +59,7 @@ void set_view_request_move_cb();
 void set_view_request_resize_cb();
 void set_view_render_pre_cb();
 void set_view_render_post_cb();
+void set_view_properties_updated_cb();
 void set_keyboard_key_cb();
 void set_pointer_button_cb();
 void set_pointer_scroll_cb();
@@ -104,6 +106,7 @@ type internalInterface struct {
 			Pre  func(View)
 			Post func(View)
 		}
+		PropertiesUpdated func(View, ViewPropertyUpdateBit)
 	}
 	Keyboard struct {
 		Key func(View, uint32, Modifiers, uint32, KeyState) bool
@@ -244,6 +247,13 @@ func SetViewRenderPreCb(cb func(View)) {
 func SetViewRenderPostCb(cb func(View)) {
 	wlcInterface.View.Render.Post = cb
 	C.set_view_render_post_cb()
+}
+
+// SetViewPropertiesUpdatedCb sets callback to trigger when view properties are
+// updated.
+func SetViewPropertiesUpdatedCb(cb func(View, ViewPropertyUpdateBit)) {
+	wlcInterface.View.PropertiesUpdated = cb
+	C.set_view_properties_updated_cb()
 }
 
 // SetKeyboardKeyCb sets callback to trigger when key event was triggered, view
@@ -407,6 +417,11 @@ func _go_handle_view_render_pre(view C.wlc_handle) {
 //export _go_handle_view_render_post
 func _go_handle_view_render_post(view C.wlc_handle) {
 	wlcInterface.View.Render.Post(View(view))
+}
+
+//export _go_handle_view_properties_updated
+func _go_handle_view_properties_updated(view C.wlc_handle, mask C.uint32_t) {
+	wlcInterface.View.PropertiesUpdated(View(view), ViewPropertyUpdateBit(mask))
 }
 
 // keyboard wrapper

@@ -60,6 +60,14 @@ const (
 	BitPopup                        = 1 << 4
 )
 
+type ViewPropertyUpdateBit C.enum_wlc_view_property_update_bit
+
+const (
+	PropertyTitle ViewPropertyUpdateBit = 1 << 0
+	PropertyClass                       = 1 << 1
+	PropertyAppID                       = 1 << 2
+)
+
 type ResizeEdge C.enum_wlc_resize_edge
 
 const (

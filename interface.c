@@ -102,6 +102,10 @@ void handle_view_render_post(wlc_handle view) {
 	_go_handle_view_render_post(view);
 }
 
+void handle_view_properties_updated(wlc_handle view, uint32_t mask) {
+	_go_handle_view_properties_updated(view, mask);
+}
+
 /* keyboard */
 bool handle_keyboard_key(wlc_handle view, uint32_t time, const struct wlc_modifiers *modifiers, uint32_t key, enum wlc_key_state state) {
 	struct wlc_modifiers nc_modifiers = {
@@ -245,6 +249,10 @@ void set_view_render_pre_cb() {
 
 void set_view_render_post_cb() {
 	wlc_set_view_render_post_cb(handle_view_render_post);
+}
+
+void set_view_properties_updated_cb() {
+	wlc_set_view_properties_updated_cb(handle_view_properties_updated);
 }
 
 void set_keyboard_key_cb() {
