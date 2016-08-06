@@ -1,6 +1,7 @@
-[![GoDoc](https://godoc.org/github.com/mikkeloscar/go-wlc?status.svg)](https://godoc.org/github.com/mikkeloscar/go-wlc)
-
 # go-wlc
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/mikkeloscar/go-wlc)](https://goreportcard.com/report/github.com/mikkeloscar/go-wlc)
+[![GoDoc](https://godoc.org/github.com/mikkeloscar/go-wlc?status.svg)](https://godoc.org/github.com/mikkeloscar/go-wlc)
 
 Go bindings for [wlc](http://github.com/Cloudef/wlc).
 
@@ -13,3 +14,7 @@ found in the wlc repo. Run it with:
 ```
 $ go run example/example.go
 ```
+
+## License
+
+See [LICENSE](LICENSE) file.
