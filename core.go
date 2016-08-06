@@ -31,8 +31,8 @@ import (
 
 var logHandler func(LogType, string)
 
-//export _go_log_handler_cb
-func _go_log_handler_cb(typ C.enum_wlc_log_type, msg *C.char) {
+//export _goLogHandlerCb
+func _goLogHandlerCb(typ C.enum_wlc_log_type, msg *C.char) {
 	logHandler(LogType(typ), C.GoString(msg))
 }
 
@@ -100,8 +100,8 @@ type fdEvent struct {
 
 var eventLoopFd = make(map[int]fdEvent)
 
-//export _go_event_loop_fd_cb
-func _go_event_loop_fd_cb(fd C.int, mask C.uint32_t) {
+//export _goEventLoopFdCb
+func _goEventLoopFdCb(fd C.int, mask C.uint32_t) {
 	if event, ok := eventLoopFd[int(fd)]; ok {
 		event.cb(int(fd), uint32(mask), event.arg)
 	}
@@ -147,8 +147,8 @@ func timerEventID() uint32 {
 	return newID
 }
 
-//export _go_event_loop_timer_cb
-func _go_event_loop_timer_cb(id C.int32_t) {
+//export _goEventLoopTimerCb
+func _goEventLoopTimerCb(id C.int32_t) {
 	if event, ok := eventLoopTimer[uint32(id)]; ok {
 		event.cb(event.arg)
 	}
@@ -173,10 +173,10 @@ func EventLoopAddTimer(cb func(interface{}), arg interface{}) EventSource {
 
 // EventSourceTimerUpdate updates timer to trigger after delay.
 // Returns true on success.
-func EventSourceTimerUpdate(source EventSource, ms_delay int32) bool {
+func EventSourceTimerUpdate(source EventSource, msDelay int32) bool {
 	return bool(C.wlc_event_source_timer_update(
 		source,
-		C.int32_t(ms_delay),
+		C.int32_t(msDelay),
 	))
 }
 

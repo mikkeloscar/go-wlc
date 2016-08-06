@@ -9,6 +9,7 @@ import "C"
 
 import "unsafe"
 
+// Resource is a wlc resource.
 type Resource C.wlc_resource
 
 // GetWLDisplay returns wayland display.

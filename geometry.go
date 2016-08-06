@@ -96,8 +96,11 @@ func geometryCtoGo(g *Geometry, c *C.struct_wlc_geometry) *Geometry {
 }
 
 var (
-	PointZero    = Point{0, 0}
-	SizeZero     = Size{0, 0}
+	// PointZero defines a point at (0,0).
+	PointZero = Point{0, 0}
+	// SizeZero defines a size 0x0.
+	SizeZero = Size{0, 0}
+	// GeometryZero defines a geometry with size 0x0 at point (0,0).
 	GeometryZero = Geometry{Point{0, 0}, Size{0, 0}}
 )
 

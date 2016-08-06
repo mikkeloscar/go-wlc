@@ -327,107 +327,107 @@ func SetInputDestroyedCb(cb func(*C.struct_libinput_device)) {
 
 // output wrappers
 
-//export _go_handle_output_created
-func _go_handle_output_created(output C.wlc_handle) C._Bool {
+//export _goHandleOutputCreated
+func _goHandleOutputCreated(output C.wlc_handle) C._Bool {
 	return C._Bool(wlcInterface.Output.Created(Output(output)))
 }
 
-//export _go_handle_output_destroyed
-func _go_handle_output_destroyed(output C.wlc_handle) {
+//export _goHandleOutputDestroyed
+func _goHandleOutputDestroyed(output C.wlc_handle) {
 	wlcInterface.Output.Destroyed(Output(output))
 }
 
-//export _go_handle_output_focus
-func _go_handle_output_focus(output C.wlc_handle, focus bool) {
+//export _goHandleOutputFocus
+func _goHandleOutputFocus(output C.wlc_handle, focus bool) {
 	wlcInterface.Output.Focus(Output(output), focus)
 }
 
-//export _go_handle_output_resolution
-func _go_handle_output_resolution(output C.wlc_handle, from *C.struct_wlc_size, to *C.struct_wlc_size) {
+//export _goHandleOutputResolution
+func _goHandleOutputResolution(output C.wlc_handle, from *C.struct_wlc_size, to *C.struct_wlc_size) {
 	wlcInterface.Output.Resolution(Output(output), sizeCtoGo(from), sizeCtoGo(to))
 }
 
-//export _go_handle_output_render_pre
-func _go_handle_output_render_pre(output C.wlc_handle) {
+//export _goHandleOutputRenderPre
+func _goHandleOutputRenderPre(output C.wlc_handle) {
 	wlcInterface.Output.Render.Pre(Output(output))
 }
 
-//export _go_handle_output_render_post
-func _go_handle_output_render_post(output C.wlc_handle) {
+//export _goHandleOutputRenderPost
+func _goHandleOutputRenderPost(output C.wlc_handle) {
 	wlcInterface.Output.Render.Post(Output(output))
 }
 
-//export _go_handle_output_context_created
-func _go_handle_output_context_created(output C.wlc_handle) {
+//export _goHandleOutputContextCreated
+func _goHandleOutputContextCreated(output C.wlc_handle) {
 	wlcInterface.Output.Context.Created(Output(output))
 }
 
-//export _go_handle_output_context_destroyed
-func _go_handle_output_context_destroyed(output C.wlc_handle) {
+//export _goHandleOutputContextDestroyed
+func _goHandleOutputContextDestroyed(output C.wlc_handle) {
 	wlcInterface.Output.Context.Destroyed(Output(output))
 }
 
 // view wrappers
 
-//export _go_handle_view_created
-func _go_handle_view_created(view C.wlc_handle) C._Bool {
+//export _goHandleViewCreated
+func _goHandleViewCreated(view C.wlc_handle) C._Bool {
 	return C._Bool(wlcInterface.View.Created(View(view)))
 }
 
-//export _go_handle_view_destroyed
-func _go_handle_view_destroyed(view C.wlc_handle) {
+//export _goHandleViewDestroyed
+func _goHandleViewDestroyed(view C.wlc_handle) {
 	wlcInterface.View.Destroyed(View(view))
 }
 
-//export _go_handle_view_focus
-func _go_handle_view_focus(view C.wlc_handle, focus bool) {
+//export _goHandleViewFocus
+func _goHandleViewFocus(view C.wlc_handle, focus bool) {
 	wlcInterface.View.Focus(View(view), focus)
 }
 
-//export _go_handle_view_move_to_output
-func _go_handle_view_move_to_output(view C.wlc_handle, fromOutput C.wlc_handle, toOutput C.wlc_handle) {
+//export _goHandleViewMoveToOutput
+func _goHandleViewMoveToOutput(view C.wlc_handle, fromOutput C.wlc_handle, toOutput C.wlc_handle) {
 	wlcInterface.View.MoveToOutput(View(view), Output(fromOutput), Output(toOutput))
 }
 
-//export _go_handle_view_request_geometry
-func _go_handle_view_request_geometry(view C.wlc_handle, geometry *C.struct_wlc_geometry) {
+//export _goHandleViewRequestGeometry
+func _goHandleViewRequestGeometry(view C.wlc_handle, geometry *C.struct_wlc_geometry) {
 	wlcInterface.View.Request.Geometry(View(view), geometryCtoGo(&Geometry{}, geometry))
 }
 
-//export _go_handle_view_request_state
-func _go_handle_view_request_state(view C.wlc_handle, state C.enum_wlc_view_state_bit, toggle bool) {
+//export _goHandleViewRequestState
+func _goHandleViewRequestState(view C.wlc_handle, state C.enum_wlc_view_state_bit, toggle bool) {
 	wlcInterface.View.Request.State(View(view), ViewStateBit(state), toggle)
 }
 
-//export _go_handle_view_request_move
-func _go_handle_view_request_move(view C.wlc_handle, point *C.struct_wlc_point) {
+//export _goHandleViewRequestMove
+func _goHandleViewRequestMove(view C.wlc_handle, point *C.struct_wlc_point) {
 	wlcInterface.View.Request.Move(View(view), pointCtoGo(point))
 }
 
-//export _go_handle_view_request_resize
-func _go_handle_view_request_resize(view C.wlc_handle, edges C.uint32_t, point *C.struct_wlc_point) {
+//export _goHandleViewRequestResize
+func _goHandleViewRequestResize(view C.wlc_handle, edges C.uint32_t, point *C.struct_wlc_point) {
 	wlcInterface.View.Request.Resize(View(view), uint32(edges), pointCtoGo(point))
 }
 
-//export _go_handle_view_render_pre
-func _go_handle_view_render_pre(view C.wlc_handle) {
+//export _goHandleViewRenderPre
+func _goHandleViewRenderPre(view C.wlc_handle) {
 	wlcInterface.View.Render.Pre(View(view))
 }
 
-//export _go_handle_view_render_post
-func _go_handle_view_render_post(view C.wlc_handle) {
+//export _goHandleViewRenderPost
+func _goHandleViewRenderPost(view C.wlc_handle) {
 	wlcInterface.View.Render.Post(View(view))
 }
 
-//export _go_handle_view_properties_updated
-func _go_handle_view_properties_updated(view C.wlc_handle, mask C.uint32_t) {
+//export _goHandleViewPropertiesUpdated
+func _goHandleViewPropertiesUpdated(view C.wlc_handle, mask C.uint32_t) {
 	wlcInterface.View.PropertiesUpdated(View(view), ViewPropertyUpdateBit(mask))
 }
 
 // keyboard wrapper
 
-//export _go_handle_keyboard_key
-func _go_handle_keyboard_key(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, key C.uint32_t, state C.enum_wlc_key_state) C._Bool {
+//export _goHandleKeyboardKey
+func _goHandleKeyboardKey(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, key C.uint32_t, state C.enum_wlc_key_state) C._Bool {
 	return C._Bool(wlcInterface.Keyboard.Key(
 		View(view),
 		uint32(time),
@@ -439,8 +439,8 @@ func _go_handle_keyboard_key(view C.wlc_handle, time C.uint32_t, modifiers *C.st
 
 // pointer wrapper
 
-//export _go_handle_pointer_button
-func _go_handle_pointer_button(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, button C.uint32_t, state C.enum_wlc_button_state, point *C.struct_wlc_point) C._Bool {
+//export _goHandlePointerButton
+func _goHandlePointerButton(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, button C.uint32_t, state C.enum_wlc_button_state, point *C.struct_wlc_point) C._Bool {
 	return C._Bool(wlcInterface.Pointer.Button(
 		View(view),
 		uint32(time),
@@ -451,8 +451,8 @@ func _go_handle_pointer_button(view C.wlc_handle, time C.uint32_t, modifiers *C.
 	))
 }
 
-//export _go_handle_pointer_scroll
-func _go_handle_pointer_scroll(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, axisBits C.uint8_t, amount *C.double) C._Bool {
+//export _goHandlePointerScroll
+func _goHandlePointerScroll(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, axisBits C.uint8_t, amount *C.double) C._Bool {
 	// convert double[2] to [2]float64
 	goAmount := [2]float64{
 		*(*float64)(amount),
@@ -467,8 +467,8 @@ func _go_handle_pointer_scroll(view C.wlc_handle, time C.uint32_t, modifiers *C.
 	))
 }
 
-//export _go_handle_pointer_motion
-func _go_handle_pointer_motion(view C.wlc_handle, time C.uint32_t, point *C.struct_wlc_point) C._Bool {
+//export _goHandlePointerMotion
+func _goHandlePointerMotion(view C.wlc_handle, time C.uint32_t, point *C.struct_wlc_point) C._Bool {
 	return C._Bool(wlcInterface.Pointer.Motion(
 		View(view),
 		uint32(time),
@@ -478,8 +478,8 @@ func _go_handle_pointer_motion(view C.wlc_handle, time C.uint32_t, point *C.stru
 
 // touch wrapper
 
-//export _go_handle_touch_touch
-func _go_handle_touch_touch(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, touch C.enum_wlc_touch_type, slot C.int32_t, point *C.struct_wlc_point) C._Bool {
+//export _goHandleTouchTouch
+func _goHandleTouchTouch(view C.wlc_handle, time C.uint32_t, modifiers *C.struct_wlc_modifiers, touch C.enum_wlc_touch_type, slot C.int32_t, point *C.struct_wlc_point) C._Bool {
 	return C._Bool(wlcInterface.Touch.Touch(
 		View(view),
 		uint32(time),
@@ -492,24 +492,24 @@ func _go_handle_touch_touch(view C.wlc_handle, time C.uint32_t, modifiers *C.str
 
 // compositor wrapper
 
-//export _go_handle_compositor_ready
-func _go_handle_compositor_ready() {
+//export _goHandleCompositorReady
+func _goHandleCompositorReady() {
 	wlcInterface.Compositor.Ready()
 }
 
-//export _go_handle_compositor_terminate
-func _go_handle_compositor_terminate() {
+//export _goHandleCompositorTerminate
+func _goHandleCompositorTerminate() {
 	wlcInterface.Compositor.Terminate()
 }
 
 // input wrapper
 
-//export _go_handle_input_created
-func _go_handle_input_created(device *C.struct_libinput_device) C._Bool {
+//export _goHandleInputCreated
+func _goHandleInputCreated(device *C.struct_libinput_device) C._Bool {
 	return C._Bool(wlcInterface.Input.Created(device))
 }
 
-//export _go_handle_input_destroyed
-func _go_handle_input_destroyed(device *C.struct_libinput_device) {
+//export _goHandleInputDestroyed
+func _goHandleInputDestroyed(device *C.struct_libinput_device) {
 	wlcInterface.Input.Destroyed(device)
 }

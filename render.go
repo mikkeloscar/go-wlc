@@ -16,6 +16,7 @@ import (
 type PixelFormat C.enum_wlc_pixel_format
 
 const (
+	// RGBA8888 defines a color format where each channel is 8 bits.
 	RGBA8888 PixelFormat = iota
 )
 
@@ -33,11 +34,11 @@ func PixelsWrite(format PixelFormat, geometry Geometry, data unsafe.Pointer) {
 // Potentially clamped geometry will be stored in out_geometry, to indicate
 // width / height of the returned data.
 // TODO: make more go friendly
-func PixelsRead(format PixelFormat, geometry Geometry, outGeometry *Geometry, out_data unsafe.Pointer) {
+func PixelsRead(format PixelFormat, geometry Geometry, outGeometry *Geometry, outData unsafe.Pointer) {
 	cgeometry := geometry.c()
 	defer C.free(unsafe.Pointer(cgeometry))
 	var cgOut C.struct_wlc_geometry
-	C.wlc_pixels_read(C.enum_wlc_pixel_format(format), cgeometry, &cgOut, out_data)
+	C.wlc_pixels_read(C.enum_wlc_pixel_format(format), cgeometry, &cgOut, outData)
 	geometryCtoGo(outGeometry, &cgOut)
 }
 
@@ -68,7 +69,9 @@ func (s Resource) FlushFrameCallbacks() {
 type Renderer C.enum_wlc_renderer
 
 const (
+	// RendererGLES2 defines a GLES2 renderer.
 	RendererGLES2 Renderer = iota
+	// NoRenderer defines no renderer.
 	NoRenderer
 )
 
@@ -81,11 +84,17 @@ func (o Output) GetRenderer() Renderer {
 type SurfaceFormat C.enum_wlc_surface_format
 
 const (
+	// SurfaceRGB defines surface format RGB.
 	SurfaceRGB SurfaceFormat = iota
+	// SurfaceRGBA defines surface format RGBA.
 	SurfaceRGBA
+	// SurfaceEGL defines surface format EGL.
 	SurfaceEGL
+	// SurfaceYUv defines surface format yuv.
 	SurfaceYUv
+	// SurfaceYUV defines surface format YUV.
 	SurfaceYUV
+	// SurfaceYXUXV defines surface format YXUXV.
 	SurfaceYXUXV
 )
 

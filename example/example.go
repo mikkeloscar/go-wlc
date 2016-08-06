@@ -15,6 +15,7 @@ const (
 	btnRight = 0x111
 )
 
+// Compositor is a wayland compositor.
 type Compositor struct {
 	action *action
 }
@@ -137,10 +138,13 @@ func (c *Compositor) relayout(output wlc.Output) {
 	}
 }
 
+// OutputResolution is the callback triggered when the output resolution
+// changes.
 func (c *Compositor) OutputResolution(output wlc.Output, from *wlc.Size, to *wlc.Size) {
 	c.relayout(output)
 }
 
+// ViewCreated is the callback triggered when a view is created.
 func (c *Compositor) ViewCreated(view wlc.View) bool {
 	view.SetMask(view.GetOutput().GetMask())
 	view.BringToFront()
@@ -149,23 +153,28 @@ func (c *Compositor) ViewCreated(view wlc.View) bool {
 	return true
 }
 
+// ViewDestroyed is the callback triggered when a view is destroyed.
 func (c *Compositor) ViewDestroyed(view wlc.View) {
 	getTopmost(view.GetOutput(), 0).Focus()
 	c.relayout(view.GetOutput())
 }
 
+// ViewFocus is the callback triggered when a view is focused.
 func (c *Compositor) ViewFocus(view wlc.View, focus bool) {
 	view.SetState(wlc.BitActivated, focus)
 }
 
+// ViewRequestMove is the callback triggered when a view is moved.
 func (c *Compositor) ViewRequestMove(view wlc.View, origin *wlc.Point) {
 	c.startInteractiveMove(view, *origin)
 }
 
+// ViewRequestResize is the callback triggered when a view is resized.
 func (c *Compositor) ViewRequestResize(view wlc.View, edges uint32, origin *wlc.Point) {
 	c.startInteractiveResize(view, edges, *origin)
 }
 
+// KeyboardKey is the callback triggered on keyboard presses.
 func (c *Compositor) KeyboardKey(view wlc.View, time uint32, modifiers wlc.Modifiers, key uint32, state wlc.KeyState) bool {
 	sym := wlc.KeyboardGetKeysymForKey(key, nil)
 
@@ -201,6 +210,7 @@ func (c *Compositor) KeyboardKey(view wlc.View, time uint32, modifiers wlc.Modif
 	return false
 }
 
+// PointerButton is the callback triggered on pointer button presses.
 func (c *Compositor) PointerButton(view wlc.View, time uint32, modifiers wlc.Modifiers, button uint32, state wlc.ButtonState, pos *wlc.Point) bool {
 	if state == wlc.ButtonStatePressed {
 		view.Focus()
@@ -224,6 +234,7 @@ func (c *Compositor) PointerButton(view wlc.View, time uint32, modifiers wlc.Mod
 	return false
 }
 
+// PointerMotion is the callback triggered on pointer motions.
 func (c *Compositor) PointerMotion(view wlc.View, time uint32, pos *wlc.Point) bool {
 	if c.action != nil {
 		dx := pos.X - c.action.grab.X
@@ -231,7 +242,7 @@ func (c *Compositor) PointerMotion(view wlc.View, time uint32, pos *wlc.Point) b
 		g := c.action.view.GetGeometry()
 
 		if c.action.edges != 0 {
-			min := wlc.Size{80, 40}
+			min := wlc.Size{W: 80, H: 40}
 			n := *g
 			if c.action.edges&wlc.ResizeEdgeLeft != 0 {
 				n.Size.W -= uint32(dx)
