@@ -135,3 +135,8 @@ func (v View) GetAppID() string {
 	capp := C.wlc_view_get_app_id(C.wlc_handle(v))
 	return C.GoString(capp)
 }
+
+// GetPID gets pid of program owning the view.
+func (v View) GetPID() int {
+	return int(C.wlc_view_get_pid(C.wlc_handle(v)))
+}

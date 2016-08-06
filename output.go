@@ -40,17 +40,32 @@ func (o Output) SetSleep(sleep bool) {
 	C.wlc_output_set_sleep(C.wlc_handle(o), C._Bool(sleep))
 }
 
-// GetResolution gets output resolution.
+// GetResolution gets real output resolution applied by either
+// wlc_output_set_resolution call or initially.
+// Do not use this for coordinate boundary.
 func (o Output) GetResolution() *Size {
 	csize := C.wlc_output_get_resolution(C.wlc_handle(o))
 	return sizeCtoGo(csize)
 }
 
+// GetVirtualResolution gets virtual output resolution with transformations
+// applied for proper rendering for example on high density displays.
+// Use this to figure out coordinate boundary.
+func (o Output) GetVirtualResolution() *Size {
+	csize := C.wlc_output_get_virtual_resolution(C.wlc_handle(o))
+	return sizeCtoGo(csize)
+}
+
 // SetResolution sets output resolution.
-func (o Output) SetResolution(resolution Size) {
+func (o Output) SetResolution(resolution Size, scale uint32) {
 	csize := resolution.c()
 	defer C.free(unsafe.Pointer(csize))
-	C.wlc_output_set_resolution(C.wlc_handle(o), csize)
+	C.wlc_output_set_resolution(C.wlc_handle(o), csize, C.uint32_t(scale))
+}
+
+// GetScale returns scale factor.
+func (o Output) GetScale() uint32 {
+	return uint32(C.wlc_output_get_scale(C.wlc_handle(o)))
 }
 
 // GetMask gets current visibility bitmask.

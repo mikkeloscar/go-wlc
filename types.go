@@ -66,6 +66,7 @@ const (
 	PropertyTitle ViewPropertyUpdateBit = 1 << 0
 	PropertyClass                       = 1 << 1
 	PropertyAppID                       = 1 << 2
+	PropertyPID                         = 1 << 3
 )
 
 type ResizeEdge C.enum_wlc_resize_edge
