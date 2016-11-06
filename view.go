@@ -118,8 +118,8 @@ func (v View) SetParent(parent View) {
 	C.wlc_view_set_parent(C.wlc_handle(v), C.wlc_handle(parent))
 }
 
-// GetTitle gets title.
-func (v View) GetTitle() string {
+// Title gets title.
+func (v View) Title() string {
 	ctitle := C.wlc_view_get_title(C.wlc_handle(v))
 	return C.GoString(ctitle)
 }

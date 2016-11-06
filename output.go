@@ -24,8 +24,8 @@ func GetFocusedOutput() Output {
 	return Output(C.wlc_get_focused_output())
 }
 
-// GetName gets output name.
-func (o Output) GetName() string {
+// Name gets output name.
+func (o Output) Name() string {
 	cname := C.wlc_output_get_name(C.wlc_handle(o))
 	return C.GoString(cname)
 }
