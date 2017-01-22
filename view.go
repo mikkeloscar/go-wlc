@@ -73,6 +73,56 @@ func (v View) GetGeometry() *Geometry {
 	return geometryCtoGo(&Geometry{}, cgeometry)
 }
 
+// PositionerGetSize gets size requested by positioner, as defined in xdg-shell
+// v6.
+func (v View) PositionerGetSize() *Size {
+	csize := C.wlc_view_positioner_get_size(C.wlc_handle(v))
+	return sizeCtoGo(csize)
+}
+
+// PositionerGetAnchorRect gets anchor rectangle requested by positioner, as
+// defined in xdg-shell v6.
+// Returns nil if view has no valid positioner.
+func (v View) PositionerGetAnchorRect() *Geometry {
+	cgeometry := C.wlc_view_positioner_get_anchor_rect(C.wlc_handle(v))
+	return geometryCtoGo(&Geometry{}, cgeometry)
+}
+
+// PositionerGetOffset gets offset requested by positioner, as defined in
+// xdg-shell v6.
+// Returns NULL if view has no valid positioner, or default value (0, 0) if
+// positioner has no offset set.
+func (v View) PositionerGetOffset() *Point {
+	cpoint := C.wlc_view_positioner_get_offset(C.wlc_handle(v))
+	return pointCtoGo(cpoint)
+}
+
+// PositionerGetAnchor gets anchor requested by positioner, as defined in
+// xdg-shell v6.
+// Returns default value WLC_BIT_ANCHOR_NONE if view has no valid positioner or
+// if positioner has no anchor set.
+func (v View) PositionerGetAnchor() PositionerAnchorBit {
+	return PositionerAnchorBit(C.wlc_view_positioner_get_anchor(C.wlc_handle(v)))
+}
+
+// PositionerGetGravity gets anchor requested by positioner, as defined in
+// xdg-shell v6.
+// Returns default value WLC_BIT_GRAVITY_NONE if view has no valid positioner
+// or if positioner has no gravity set.
+func (v View) PositionerGetGravity() PositionerGravityBit {
+	return PositionerGravityBit(C.wlc_view_positioner_get_gravity(C.wlc_handle(v)))
+}
+
+// PositionerGetConstraintAdjustment gets constraint adjustment requested by
+// positioner, as defined in xdg-shell v6.
+// Returns default value WLC_BIT_CONSTRAINT_ADJUSTMENT_NONE if view has no
+// valid positioner or if positioner has no constraint adjustment set.
+func (v View) PositionerGetConstraintAdjustment() PositionerConstraintAdjustmentBit {
+	return PositionerConstraintAdjustmentBit(
+		C.wlc_view_positioner_get_constraint_adjustment(C.wlc_handle(v)),
+	)
+}
+
 // GetVisibleGeometry gets current visible geometry (what wlc displays).
 func (v View) GetVisibleGeometry() Geometry {
 	cgeometry := C.struct_wlc_geometry{}
@@ -122,6 +172,12 @@ func (v View) SetParent(parent View) {
 func (v View) Title() string {
 	ctitle := C.wlc_view_get_title(C.wlc_handle(v))
 	return C.GoString(ctitle)
+}
+
+// Instance gets instance (shell-surface only).
+func (v View) Instance() string {
+	cinstance := C.wlc_view_get_instance(C.wlc_handle(v))
+	return C.GoString(cinstance)
 }
 
 // GetClass gets class. (shell-surface only).

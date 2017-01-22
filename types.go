@@ -135,6 +135,38 @@ const (
 	TouchCancel
 )
 
+type PositionerAnchorBit C.enum_wlc_positioner_anchor_bit
+
+const (
+	BitAnchorNone   = 0
+	BitAnchorTop    = 1 << 0
+	BitAnchorBottom = 1 << 1
+	BitAnchorLeft   = 1 << 2
+	BitAnchorRight  = 1 << 3
+)
+
+type PositionerGravityBit C.enum_wlc_positioner_gravity_bit
+
+const (
+	BitGravityNone   = 0
+	BitGravityTop    = 1 << 0
+	BitGravityBottom = 1 << 1
+	BitGravityLeft   = 1 << 2
+	BitGravityRight  = 1 << 3
+)
+
+type PositionerConstraintAdjustmentBit C.enum_wlc_positioner_constraint_adjustment_bit
+
+const (
+	BitConstraintAdjustmentNone    = 0
+	BitConstraintAdjustmentSlideX  = 1 << 0
+	BitConstraintAdjustmentSlideY  = 1 << 1
+	BitConstraintAdjustmentFlipX   = 1 << 2
+	BitConstraintAdjustmentFlipY   = 1 << 3
+	BitConstraintAdjustmentResizeX = 1 << 4
+	BitConstraintAdjustmentResizeY = 1 << 5
+)
+
 // Modifiers describes the state of keyboard modifiers in various functions.
 type Modifiers struct {
 	Leds uint32
