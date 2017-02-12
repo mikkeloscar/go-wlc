@@ -174,6 +174,14 @@ func (c *Compositor) ViewRequestResize(view wlc.View, edges uint32, origin *wlc.
 	c.startInteractiveResize(view, edges, *origin)
 }
 
+// ViewRequestGeometry is the callback triggered when a new view geometry is
+// requested.
+// Note this callback must allways be be set (even if it's stubbed) otherwise
+// wlc won't accept your geometry requests.
+func (c *Compositor) ViewRequestGeometry(view wlc.View, geometry *wlc.Geometry) {
+	// stub intentionally to ignore geometry requests.
+}
+
 // KeyboardKey is the callback triggered on keyboard presses.
 func (c *Compositor) KeyboardKey(view wlc.View, time uint32, modifiers wlc.Modifiers, key uint32, state wlc.KeyState) bool {
 	sym := wlc.KeyboardGetKeysymForKey(key, nil)
@@ -301,6 +309,7 @@ func main() {
 	wlc.SetViewFocusCb(compositor.ViewFocus)
 	wlc.SetViewRequestMoveCb(compositor.ViewRequestMove)
 	wlc.SetViewRequestResizeCb(compositor.ViewRequestResize)
+	wlc.SetViewRequestGeometryCb(compositor.ViewRequestGeometry)
 	wlc.SetKeyboardKeyCb(compositor.KeyboardKey)
 	wlc.SetPointerButtonCb(compositor.PointerButton)
 	wlc.SetPointerMotionCb(compositor.PointerMotion)
